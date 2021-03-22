@@ -23,8 +23,8 @@ public class MyRoundRectImageView extends AppCompatImageView {
      * <p>
      * 这两个都是画圆的半径
      */
-    private int roundWidth = 20;
-    private int roundHeight = 20;
+    private int roundWidth = 50;
+    private int roundHeight = 50;
     private Paint paint2;
 
     public MyRoundRectImageView(Context context, AttributeSet attrs, int defStyle) {

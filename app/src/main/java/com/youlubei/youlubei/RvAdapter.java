@@ -34,7 +34,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mList != null) {
-            holder.title.setText(mList.get(position).getTitle());
+//            holder.title.setText(mList.get(position).getTitle());
             holder.content.setText(mList.get(position).getContent());
         }
     }
@@ -54,7 +54,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.img_item);
-            title = itemView.findViewById(R.id.tv_title_item);
+//            title = itemView.findViewById(R.id.tv_title_item);
             content = itemView.findViewById(R.id.tv_content_item);
         }
     }

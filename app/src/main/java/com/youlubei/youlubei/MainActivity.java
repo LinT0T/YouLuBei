@@ -1,6 +1,7 @@
 package com.youlubei.youlubei;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             .readTimeout(2, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false).build();
     private ImageView backgroundImageView;
-    private TextView titleTextView,contentChTextView,contentEngTextView;
+    private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
 
     @Override
@@ -53,11 +54,18 @@ public class MainActivity extends AppCompatActivity {
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
         List<RvBean> list = new ArrayList<RvBean>();
-            RvBean rvBean0 = new RvBean("背单词");
-        RvBean rvBean1 = new RvBean("背单词");
-        RvBean rvBean2 = new RvBean("背单词");
-        RvBean rvBean3 = new RvBean("背单词");
-//        RvAdapter rvAdapter = new RvAdapter(this,);
+        RvBean rvBean0 = new RvBean("背单词");
+        RvBean rvBean1 = new RvBean("阅读");
+        RvBean rvBean2 = new RvBean("学习");
+        RvBean rvBean3 = new RvBean("运动");
+        list.add(rvBean0);
+        list.add(rvBean1);
+        list.add(rvBean2);
+        list.add(rvBean3);
+        RvAdapter rvAdapter = new RvAdapter(this, list);
+        recyclerView.setAdapter(rvAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
         initBar();
         loadBackground(this);
         getDate(titleTextView);
@@ -121,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadContent(){
+    private void loadContent() {
         String url = "http://open.iciba.com/dsapi/";
         final Request request = new Request.Builder()
                 .url(url)
