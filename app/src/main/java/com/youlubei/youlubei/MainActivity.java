@@ -1,14 +1,17 @@
 package com.youlubei.youlubei;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -32,7 +35,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlidingViewClickListener{
 
     static final String TAG = "MainActivity";
     private final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView backgroundImageView;
     private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
-
+    private RvAdapter rvAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +65,11 @@ public class MainActivity extends AppCompatActivity {
         list.add(rvBean1);
         list.add(rvBean2);
         list.add(rvBean3);
-        RvAdapter rvAdapter = new RvAdapter(this, list);
+        rvAdapter = new RvAdapter(this, list);
         recyclerView.setAdapter(rvAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         initBar();
         loadBackground(this);
         getDate(titleTextView);
@@ -159,4 +163,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    /**
+     * item正文的点击事件
+     *
+     * @param view
+     * @param position
+     */
+    @Override
+    public void onItemClick(View view, int position) {
+        //点击item正文的代码逻辑
+    }
+
+
+    /**
+     * item的左滑设置
+     *
+     * @param view
+     * @param position
+     */
+    @Override
+    public void onSetBtnCilck(View view, int position) {
+
+        //“设置”点击事件的代码逻辑
+        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
+        System.out.println("请设置");
+    }
+
+
+    /**
+     * item的左滑删除
+     *
+     * @param view
+     * @param position
+     */
+    @Override
+    public void onDeleteBtnCilck(View view, int position) {
+        rvAdapter.removeData(position);
+    }
+
+
+
 }
