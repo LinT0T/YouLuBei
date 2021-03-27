@@ -1,4 +1,4 @@
-package com.youlubei.youlubei;
+package com.youlubei.youlubei.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
+
+import com.youlubei.youlubei.R;
 
 /**
  * 自定义View,继承水平滚动条
@@ -62,7 +64,7 @@ public class LeftSlideView extends HorizontalScrollView {
             this.scrollTo(0, 0);
 
             //获取水平滚动条可以滑动的范围，即右侧“设置”、“删除”按钮的总宽度
-            mScrollWidth = mTextViewFinish.getWidth() * 2 + mTextViewSet.getWidth() ;
+            mScrollWidth = mTextViewFinish.getWidth() + mTextViewSet.getWidth();
         }
     }
 
@@ -103,7 +105,7 @@ public class LeftSlideView extends HorizontalScrollView {
      */
     public void changeScrollx() {
         if (getScrollX() >= (mScrollWidth / 2)) {
-            this.smoothScrollTo(mScrollWidth, 0);
+            this.smoothScrollTo(mScrollWidth * 2, 0);
             isOpen = true;
             mIonSlidingButtonListener.onMenuIsOpen(this);
         } else {

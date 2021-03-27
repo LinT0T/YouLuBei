@@ -1,4 +1,4 @@
-package com.youlubei.youlubei;
+package com.youlubei.youlubei.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,6 +13,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatImageView;
+
+import com.youlubei.youlubei.R;
 
 
 public class MyRoundRectImageView extends AppCompatImageView {

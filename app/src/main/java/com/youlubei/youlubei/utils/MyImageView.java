@@ -1,4 +1,4 @@
-package com.youlubei.youlubei;
+package com.youlubei.youlubei.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
