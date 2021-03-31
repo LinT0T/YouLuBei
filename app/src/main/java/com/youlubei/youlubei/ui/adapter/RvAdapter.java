@@ -30,6 +30,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     private List<RvBean> mList;
     private IonSlidingViewClickListener mIDeleteBtnClickListener;
     private IonSlidingViewClickListener mISetBtnClickListener;
+    private IonSlidingViewClickListener ionSlidingViewClickListener;
 
     private LeftSlideView mMenu = null;
 
@@ -38,7 +39,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         this.mList = mList;
         mIDeleteBtnClickListener = (IonSlidingViewClickListener) context;
         mISetBtnClickListener = (IonSlidingViewClickListener) context;
-
+        ionSlidingViewClickListener = (IonSlidingViewClickListener) context;
     }
 
     @NonNull
@@ -203,8 +204,15 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         mList.remove(position);
         notifyItemRemoved(position);
         if (position != mList.size()) {
-            notifyItemRangeChanged(position, mList.size() - position);
+            notifyItemRangeChanged(0, mList.size() );
         }
+        for (RvBean a:mList
+             ) {
+            if (!a.isFinish()){
+                return;
+            }
+        }
+        ionSlidingViewClickListener.onAllFinish();
     }
 
 
@@ -267,6 +275,8 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         void onDeleteBtnCilck(View view, int position, boolean isFinish);//点击“删除”
 
         void onSetBtnCilck(View view, int position);//点击“设置”
+
+        void onAllFinish();//所有任务完成
     }
 
 }

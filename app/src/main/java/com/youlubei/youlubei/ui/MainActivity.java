@@ -2,8 +2,12 @@ package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +28,7 @@ import com.youlubei.youlubei.bean.BackgroundBean;
 import com.youlubei.youlubei.bean.ContentBean;
 import com.youlubei.youlubei.bean.RvBean;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
+import com.youlubei.youlubei.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
     private ConstraintLayout layout;
+    private View container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,47 +71,87 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
         layout = findViewById(R.id.layout_root);
-        List<RvBean> list = new ArrayList<RvBean>();
-        String firstUse = (String) SharedPreferenceUtil.getInstance().get(this, "first_use", "first");
-        assert firstUse != null;
-        RvBean rvBean0;
-        RvBean rvBean1;
-        RvBean rvBean2;
-        RvBean rvBean3;
-        if (firstUse.equals("first")) {
-            rvBean0 = new RvBean("背单词",
-                   0,
-                    false);
-            rvBean1 = new RvBean("阅读",
-                   1,
-                    false);
-            rvBean2 = new RvBean("学习",
-                    2,
-                    false);
-            rvBean3 = new RvBean("运动",
-                   3,
-                    false);
-            SharedPreferenceUtil.getInstance().put(this,"first_use","false");
-        } else {
-            rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-            rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
-            rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
-            rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
-        }
-        list.add(rvBean0);
-        list.add(rvBean1);
-        list.add(rvBean2);
-        list.add(rvBean3);
+        container = findViewById(R.id.main_container);
+        List<RvBean> list = new ArrayList<>();
+
+        initData(list);
+
         rvAdapter = new RvAdapter(this, list);
         recyclerView.setAdapter(rvAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new OvershootInLeftAnimator());
         Objects.requireNonNull(recyclerView.getItemAnimator()).setAddDuration(300);
+
+
         initBar();
-        loadBackground(this);
+        String imgUrl = getIntent().getStringExtra("url");
+        if (imgUrl!=null){
+            Glide.with(this).load(imgUrl).into(backgroundImageView);
+        }else {
+            loadBackground(this);
+        }
+
         getDate(titleTextView);
         loadContent();
+    }
+
+    private void initData(List<RvBean> list) {
+        String firstUse = (String) SharedPreferenceUtil.getInstance().get(this, "first_use", "first");
+        assert firstUse != null;
+        RvBean rvBean0;
+        RvBean rvBean1;
+        RvBean rvBean2;
+        RvBean rvBean3;
+        int dayOfYearInData = (int) SharedPreferenceUtil.getInstance().get(this, "date", -1);
+        int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        if (firstUse.equals("first") || dayOfYear != dayOfYearInData) {
+            rvBean0 = new RvBean("背单词",
+                    0,
+                    false);
+            rvBean1 = new RvBean("阅读",
+                    1,
+                    false);
+            rvBean2 = new RvBean("学习",
+                    2,
+                    false);
+            rvBean3 = new RvBean("运动",
+                    3,
+                    false);
+            SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
+
+            Toast toast = new Toast(getApplicationContext());
+
+            //创建一个填充物,用于填充Toast
+            LayoutInflater inflater = LayoutInflater.from(this);
+
+            //填充物来自的xml文件,在这个改成一个view
+            //实现xml到view的转变哦
+            View view = inflater.inflate(R.layout.toast, null);
+
+            //不一定需要，找到xml里面的组件，设置组件里面的具体内容
+            TextView textView1 = view.findViewById(R.id.tv_toast);
+
+            //把填充物放进toast
+            toast.setView(view);
+            toast.setDuration(Toast.LENGTH_SHORT);
+
+            //展示toast
+            toast.show();
+
+        } else {
+            rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+            rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
+            rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
+            rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
+        }
+
+        SharedPreferenceUtil.getInstance().put(this, "date", Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
+
+        list.add(rvBean0);
+        list.add(rvBean1);
+        list.add(rvBean2);
+        list.add(rvBean3);
     }
 
     private void getDate(TextView tv) {
@@ -147,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.d(TAG, "onFailure: ");
                 runOnUiThread(() -> {
-//                        backgroundImageView.setImageResource(R.mipmap.background);
+                    backgroundImageView.setImageResource(R.mipmap.background);
                 });
 
             }
@@ -245,6 +291,44 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
     }
 
+    @Override
+    public void onAllFinish() {
+        new ParticleSystem(this, 1000, R.drawable.flower, 3000)
+                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 180)
+                .setRotationSpeedRange(-30, 30)
+                .setAcceleration(0.001f, 90)
+                .emit(container, 30, 3000);
+
+//        new ParticleSystem(this, 1000, R.drawable.flower, 10000)
+//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
+//                .setRotationSpeed(60)
+//                .setAcceleration(0.00005f, 90)
+//                .emit(0, -100, 30, 10000);
+//        new ParticleSystem(this, 1000, R.drawable.flower, 10000)
+//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
+//                .setRotationSpeed(60)
+//                .setAcceleration(0.00005f, 90)
+//                .emit(Utils.getScreenWidth(this), -100, 30, 10000);
+        Toast toast = new Toast(getApplicationContext());
+
+        //创建一个填充物,用于填充Toast
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        //填充物来自的xml文件,在这个改成一个view
+        //实现xml到view的转变哦
+        View view = inflater.inflate(R.layout.toast, null);
+
+        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
+        TextView textView1 = view.findViewById(R.id.tv_toast);
+
+        //把填充物放进toast
+        toast.setView(view);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        textView1.setText("赞！任务全部完成啦");
+
+        //展示toast
+        toast.show();
+    }
 
     @Override
     protected void onPause() {

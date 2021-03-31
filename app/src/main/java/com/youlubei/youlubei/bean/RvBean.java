@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class RvBean implements Serializable {
     private String title;
-    private String content;
+    private String content = "";
     /**
      * 0: ResourcesCompat.getDrawable(getResources(), R.drawable.roug_word_finish_background, null)
      * 1: ResourcesCompat.getDrawable(getResources(), R.drawable.roug_read_finish_background, null)
