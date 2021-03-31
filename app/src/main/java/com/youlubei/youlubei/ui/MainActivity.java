@@ -1,6 +1,7 @@
 package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             .readTimeout(2, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false).build();
     private ImageView backgroundImageView;
+    private ImageView clockIn;
     private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         backgroundImageView = findViewById(R.id.img_background_main);
+        clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
@@ -74,18 +76,18 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         RvBean rvBean3;
         if (firstUse.equals("first")) {
             rvBean0 = new RvBean("背单词",
-                   0,
+                    0,
                     false);
             rvBean1 = new RvBean("阅读",
-                   1,
+                    1,
                     false);
             rvBean2 = new RvBean("学习",
                     2,
                     false);
             rvBean3 = new RvBean("运动",
-                   3,
+                    3,
                     false);
-            SharedPreferenceUtil.getInstance().put(this,"first_use","false");
+            SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
         } else {
             rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
             rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         list.add(rvBean1);
         list.add(rvBean2);
         list.add(rvBean3);
+
         rvAdapter = new RvAdapter(this, list);
         recyclerView.setAdapter(rvAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         loadBackground(this);
         getDate(titleTextView);
         loadContent();
+        clockInListener();
     }
 
     private void getDate(TextView tv) {
@@ -196,6 +200,17 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         });
     }
 
+
+    private void clockInListener() {
+        clockIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
+                intent.putExtra("level", rvAdapter.checkFinish());
+                startActivity(intent);
+            }
+        });
+    }
 
     /**
      * item正文的点击事件
