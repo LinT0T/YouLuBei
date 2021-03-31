@@ -17,6 +17,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.youlubei.youlubei.ui.ContributionActivity;
+import com.youlubei.youlubei.ui.MainActivity;
 import com.youlubei.youlubei.utils.LeftSlideView;
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
@@ -58,7 +60,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
             holder.content.setText(rvBean.getContent());
             holder.layout.getLayoutParams().width = Utils.getScreenWidth(context);
             if (rvBean.isFinish()) {
-                switch (rvBean.getFinishColor()){
+                switch (rvBean.getFinishColor()) {
                     case 0:
                         holder.layout.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.roug_word_finish_background, null));
                         break;
@@ -167,28 +169,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         return mList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        //        private TextView title;
-        private TextView content;
-        private TextView set;
-        private TextView delete;
-        private ViewGroup layout;
-        private View line;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.img_item);
-            set = itemView.findViewById(R.id.tv_set);
-            delete = itemView.findViewById(R.id.tv_delete);
-            layout = itemView.findViewById(R.id.layout_content);
-            content = itemView.findViewById(R.id.tv_content_item);
-            line = itemView.findViewById(R.id.line_item);
-            ((LeftSlideView) itemView).setSlidingButtonListener(RvAdapter.this);
-        }
-    }
-
-
     /**
      * 删除item
      *
@@ -207,7 +187,15 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         }
     }
 
-
+    public int checkFinish() {
+        int count = 0;
+        for (RvBean rvBean : mList) {
+            if (rvBean.isFinish()) {
+                count++;
+            }
+        }
+        return count;
+    }
 
     /**
      * 删除菜单打开信息接收
@@ -216,7 +204,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     public void onMenuIsOpen(View view) {
         mMenu = (LeftSlideView) view;
     }
-
 
     /**
      * 滑动或者点击了Item监听
@@ -250,13 +237,12 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         return mMenu != null;
     }
 
-    public void saveData(){
-        SharedPreferenceUtil.getInstance().put(context,"data0",new Gson().toJson(mList.get(0)));
-        SharedPreferenceUtil.getInstance().put(context,"data1",new Gson().toJson(mList.get(1)));
-        SharedPreferenceUtil.getInstance().put(context,"data2",new Gson().toJson(mList.get(2)));
-        SharedPreferenceUtil.getInstance().put(context,"data3",new Gson().toJson(mList.get(3)));
+    public void saveData() {
+        SharedPreferenceUtil.getInstance().put(context, "data0", new Gson().toJson(mList.get(0)));
+        SharedPreferenceUtil.getInstance().put(context, "data1", new Gson().toJson(mList.get(1)));
+        SharedPreferenceUtil.getInstance().put(context, "data2", new Gson().toJson(mList.get(2)));
+        SharedPreferenceUtil.getInstance().put(context, "data3", new Gson().toJson(mList.get(3)));
     }
-
 
     /**
      * 注册接口的方法：点击事件。在Mactivity.java实现这些方法。
@@ -267,6 +253,27 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         void onDeleteBtnCilck(View view, int position, boolean isFinish);//点击“删除”
 
         void onSetBtnCilck(View view, int position);//点击“设置”
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView imageView;
+        //        private TextView title;
+        private TextView content;
+        private TextView set;
+        private TextView delete;
+        private ViewGroup layout;
+        private View line;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.img_item);
+            set = itemView.findViewById(R.id.tv_set);
+            delete = itemView.findViewById(R.id.tv_delete);
+            layout = itemView.findViewById(R.id.layout_content);
+            content = itemView.findViewById(R.id.tv_content_item);
+            line = itemView.findViewById(R.id.line_item);
+            ((LeftSlideView) itemView).setSlidingButtonListener(RvAdapter.this);
+        }
     }
 
 }
