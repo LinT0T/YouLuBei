@@ -42,7 +42,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         imageView = findViewById(R.id.img_splash);
         textView = findViewById(R.id.tv_splash);
+
         textView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
+
         loadBackground(this);
         intent = new Intent(SplashActivity.this, MainActivity.class);
 
@@ -88,6 +91,7 @@ public class SplashActivity extends AppCompatActivity {
                     animation.setDuration(1000);
                     textView.setText(text);
                     textView.startAnimation(animation);
+                    imageView.setVisibility(View.VISIBLE);
                     imageView.startAnimation(animation);
                     intent.putExtra("url",imgUrl);
                 });

@@ -266,6 +266,17 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     }
 
 
+    public int checkFinish(){
+        int count =0;
+        for (RvBean rvBean : mList) {
+            if (rvBean.isFinish())
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     /**
      * 注册接口的方法：点击事件。在Mactivity.java实现这些方法。
      */
