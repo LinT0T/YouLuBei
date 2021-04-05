@@ -267,7 +267,8 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
                 intent.putExtra("level", rvAdapter.checkFinish());
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+                startActivity(intent,options.toBundle());
             }
         });
     }
@@ -301,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         i.putExtra("url", imgUrl);
         startActivity(i, options.toBundle());
+        rvAdapter.closeMenu();
     }
 
 
