@@ -14,6 +14,8 @@ import android.view.View;
 import com.youlubei.youlubei.bean.Day;
 import com.youlubei.youlubei.utils.Utils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +27,7 @@ import java.util.List;
 public class GitHubContributionView extends View {
 
     /**
+     * `````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
      * 灰色方格的默认颜色
      **/
     private final static int DEFAULT_BOX_COLOUR = 0xFFEEEEEE;
@@ -33,6 +36,11 @@ public class GitHubContributionView extends View {
      **/
     private final static int[] COLOUR_LEVEL =
             new int[]{0xFF1E6823, 0xFF44A340, 0xFF8CC665, 0xFFD6E685, DEFAULT_BOX_COLOUR};
+    /**
+     * 每个月的第一天是一年的第几天
+     */
+    private final static int[] DAY_OF_MONTH =
+            new int[]{0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
     /**
      * 星期
      **/
@@ -49,7 +57,11 @@ public class GitHubContributionView extends View {
     /**
      * 小方格的默认边长
      **/
-    private float boxSide = (float) 6.5;
+    private float boxSide = (float) 30;
+    /**
+     * 文字弹框的大小
+     */
+    private int toastSide = 10;
     /**
      * 小方格间的默认间隔
      **/
@@ -95,13 +107,13 @@ public class GitHubContributionView extends View {
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setColor(Color.GRAY);
-        textPaint.setTextSize(12);
+        textPaint.setTextSize(30);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
         infoPaint = new Paint();
         infoPaint.setStyle(Paint.Style.FILL);
         infoPaint.setColor(0xCC888888);
-        infoPaint.setTextSize(12);
+        infoPaint.setTextSize(6);
         infoPaint.setAntiAlias(true);
         //将默认值转换px
         padding = Utils.dp2px(getContext(), padding);
@@ -132,12 +144,57 @@ public class GitHubContributionView extends View {
      *
      * @param canvas 画布
      */
+//    private void drawBox(Canvas canvas) {
+//        //方格的左上右下坐标
+//        float startX, startY, endX, endY;
+//        //起始月份为1月
+//        int month = 1;
+//        for (int i = 0; i < mDays.size(); i++) {
+//            Day day = mDays.get(i);
+//            if (i == 0) {
+//                //画1月的文本标记,坐标应该是x=padding,y=padding-boxSide/2(间隙),y坐标在表格上面一点
+//                canvas.drawText(months[0], padding, padding - boxSide / 2, textPaint);
+//            }
+//            if (day.week == 1 && i != 0) {
+//                //如果当天是周1，那么说明增加了一列
+//                column++;
+//                //如果列首的月份有变化，那么说明需要画月份
+//                if (day.month > month) {
+//                    month = day.month;
+//                    //月份文本的坐标计算,x坐标在变化，而y坐标都是一样的，boxSide/2(间隙)
+//                    canvas.drawText(months[month - 1], padding + column * (boxSide + boxInterval), padding - boxSide / 2, textPaint);
+//                }
+//            }
+//            //计算方格坐标点,x坐标一致随列数的增多而增加,y坐标随行数的增多而变化
+//            startX = padding + column * (boxSide + boxInterval);
+//            startY = padding + (day.week - 1) * (boxSide + boxInterval);
+//            endX = startX + boxSide;
+//            endY = startY + boxSide;
+//            //将该方格的坐标保存下来,这样可以在点击方格的时候计算弹框的坐标
+//            day.startX = startX;
+//            day.startY = startY;
+//            day.endX = endX;
+//            day.endY = endY;
+//            //给画笔设置当前天的颜色
+//            boxPaint.setColor(day.colour);
+//            canvas.drawRect(startX, startY, endX, endY, boxPaint);
+//        }
+//        boxPaint.setColor(DEFAULT_BOX_COLOUR);//恢复默认颜色
+//    }
+
+    /**
+     * 画出当前月和下个月方格小块和上面的月份
+     *
+     * @param canvas 画布
+     */
     private void drawBox(Canvas canvas) {
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH);
+        int amonth = month;
         //方格的左上右下坐标
         float startX, startY, endX, endY;
         //起始月份为1月
-        int month = 1;
-        for (int i = 0; i < mDays.size(); i++) {
+        for (int i = DAY_OF_MONTH[month]; i < DAY_OF_MONTH[month + 2]; i++) {
             Day day = mDays.get(i);
             if (i == 0) {
                 //画1月的文本标记,坐标应该是x=padding,y=padding-boxSide/2(间隙),y坐标在表格上面一点
@@ -147,14 +204,14 @@ public class GitHubContributionView extends View {
                 //如果当天是周1，那么说明增加了一列
                 column++;
                 //如果列首的月份有变化，那么说明需要画月份
-                if (day.month > month) {
-                    month = day.month;
+                if (day.month > amonth) {
+                    amonth = day.month;
                     //月份文本的坐标计算,x坐标在变化，而y坐标都是一样的，boxSide/2(间隙)
-                    canvas.drawText(months[month - 1], padding + column * (boxSide + boxInterval), padding - boxSide / 2, textPaint);
+                    canvas.drawText(months[amonth - 1], padding + column * (boxSide + boxInterval) + 70, padding - boxSide / 2 + 10, textPaint);
                 }
             }
             //计算方格坐标点,x坐标一致随列数的增多而增加,y坐标随行数的增多而变化
-            startX = padding + column * (boxSide + boxInterval);
+            startX = padding + column * (boxSide + boxInterval) + 75;
             startY = padding + (day.week - 1) * (boxSide + boxInterval);
             endX = startX + boxSide;
             endY = startY + boxSide;
@@ -281,18 +338,18 @@ public class GitHubContributionView extends View {
             Log.e("height", infoHeight + "");
             Log.e("length", infoLength + "");
             //矩形左上点应该是x=当前天的x+边长/2-（文本长度/2+文本和框的间隙）
-            float leftX = (clickDay.startX + boxSide / 2) - (infoLength / 2 + boxSide);
+            float leftX = (clickDay.startX + toastSide / 2) - (infoLength / 2 + toastSide);
             //矩形左上点应该是y=当前天的y+边长/2-（文本高度+上下文本和框的间隙）
-            float topY = clickDay.startY - (infoHeight + 2 * boxSide);
+            float topY = clickDay.startY - (infoHeight + 2 * toastSide);
             //矩形的右下点应该是x=leftX+文本长度+文字两边和矩形的间距
-            float rightX = leftX + infoLength + 2 * boxSide;
+            float rightX = leftX + infoLength + 2 * toastSide;
             //矩形的右下点应该是y=当前天的y
             float bottomY = clickDay.startY;
             System.out.println("" + leftX + "/" + topY + "/" + rightX + "/" + bottomY);
             RectF rectF = new RectF(leftX, topY, rightX, bottomY);
-            canvas.drawRoundRect(rectF, 4, 4, infoPaint);
+            canvas.drawRoundRect(rectF, 40, 40, infoPaint);
             //绘制文字,x=leftX+文字和矩形间距,y=topY+文字和矩形上面间距+文字顶到基线高度
-            canvas.drawText(popupInfo, leftX + boxSide, topY + boxSide + Math.abs(metrics.ascent), textPaint);
+            canvas.drawText(popupInfo, leftX + toastSide, topY + toastSide + Math.abs(metrics.ascent), textPaint);
             clickDay = null;//重新置空，保证点击方格外信息消失
             textPaint.setColor(Color.GRAY);//恢复画笔颜色
         }
