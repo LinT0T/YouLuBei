@@ -1,32 +1,36 @@
 package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.util.Log;
+import android.util.Pair;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.gyf.immersionbar.ImmersionBar;
 import com.plattysoft.leonids.ParticleSystem;
 import com.youlubei.youlubei.R;
-import com.youlubei.youlubei.ui.adapter.RvAdapter;
 import com.youlubei.youlubei.bean.BackgroundBean;
 import com.youlubei.youlubei.bean.ContentBean;
 import com.youlubei.youlubei.bean.RvBean;
+import com.youlubei.youlubei.ui.adapter.RvAdapter;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
 import com.youlubei.youlubei.utils.Utils;
 
@@ -55,17 +59,39 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             .readTimeout(2, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false).build();
     private ImageView backgroundImageView;
+    private ImageView clockIn;
     private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
     private ConstraintLayout layout;
     private View container;
+    private String imgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        Slide slide = new Slide();
+//        slide.setDuration(500);
+//        getWindow().setExitTransition(slide);
+//        getWindow().setReenterTransition(slide);
+
+        Transition transition = new TransitionSet()
+                .addTransition(new Slide(Gravity.START)
+                        .addTarget(R.id.tv_title_main)
+                        .addTarget(R.id.tv_content_ch_main)
+                        .addTarget(R.id.tv_content_en_main)
+
+                )
+                .addTransition(new Slide(Gravity.BOTTOM).addTarget(R.id.root_item))
+                .addTransition(new Fade().addTarget(R.id.img_background_main))
+                .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in))
+                .setDuration(500);
+
+        getWindow().setExitTransition(transition);
+
         backgroundImageView = findViewById(R.id.img_background_main);
+        clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
@@ -76,24 +102,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
         initData(list);
 
-        rvAdapter = new RvAdapter(this, list);
-        recyclerView.setAdapter(rvAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new OvershootInLeftAnimator());
-        Objects.requireNonNull(recyclerView.getItemAnimator()).setAddDuration(300);
-
-
-        initBar();
-        String imgUrl = getIntent().getStringExtra("url");
-        if (imgUrl!=null){
-            Glide.with(this).load(imgUrl).into(backgroundImageView);
-        }else {
-            loadBackground(this);
-        }
-
-        getDate(titleTextView);
-        loadContent();
     }
 
     private void initData(List<RvBean> list) {
@@ -120,24 +128,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                     false);
             SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
 
-            Toast toast = new Toast(getApplicationContext());
-
-            //创建一个填充物,用于填充Toast
-            LayoutInflater inflater = LayoutInflater.from(this);
-
-            //填充物来自的xml文件,在这个改成一个view
-            //实现xml到view的转变哦
-            View view = inflater.inflate(R.layout.toast, null);
-
-            //不一定需要，找到xml里面的组件，设置组件里面的具体内容
-            TextView textView1 = view.findViewById(R.id.tv_toast);
-
-            //把填充物放进toast
-            toast.setView(view);
-            toast.setDuration(Toast.LENGTH_SHORT);
-
-            //展示toast
-            toast.show();
+            showToast();
 
         } else {
             rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
@@ -152,6 +143,44 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         list.add(rvBean1);
         list.add(rvBean2);
         list.add(rvBean3);
+
+        rvAdapter = new RvAdapter(this, list);
+        recyclerView.setAdapter(rvAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new OvershootInLeftAnimator());
+        Objects.requireNonNull(recyclerView.getItemAnimator()).setAddDuration(300);
+        Utils.initBar(this);
+        imgUrl = getIntent().getStringExtra("url");
+        if (imgUrl != null) {
+            Glide.with(this).load(imgUrl).into(backgroundImageView);
+        } else {
+            loadBackground(this);
+        }
+        getDate(titleTextView);
+        loadContent();
+        clockInListener();
+    }
+
+    private void showToast() {
+        Toast toast = new Toast(getApplicationContext());
+
+        //创建一个填充物,用于填充Toast
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        //填充物来自的xml文件,在这个改成一个view
+        //实现xml到view的转变哦
+        View view = inflater.inflate(R.layout.toast, null);
+
+        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
+        TextView textView1 = view.findViewById(R.id.tv_toast);
+
+        //把填充物放进toast
+        toast.setView(view);
+        toast.setDuration(Toast.LENGTH_SHORT);
+
+        //展示toast
+        toast.show();
     }
 
     private void getDate(TextView tv) {
@@ -169,17 +198,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
     }
 
-    private void initBar() {
-        ImmersionBar.with(this).init();
-        ImmersionBar.with(this)
-                .transparentStatusBar()
-                .transparentNavigationBar()
-                .fullScreen(true)
-                .statusBarDarkFont(true)
-                .navigationBarDarkIcon(true)
-                .statusBarColor("#FBFBFB")
-                .navigationBarColor("#FBFBFB");
-    }
 
     private void loadBackground(Activity activity) {
         String url = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
@@ -243,6 +261,17 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     }
 
 
+    private void clockInListener() {
+        clockIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
+                intent.putExtra("level", rvAdapter.checkFinish());
+                startActivity(intent);
+            }
+        });
+    }
+
     /**
      * item正文的点击事件
      *
@@ -267,8 +296,11 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     public void onSetBtnCilck(View view, int position) {
 
         //“设置”点击事件的代码逻辑
-        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
-        System.out.println("请设置");
+//        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
+        Intent i = new Intent(this, SetActivity.class);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        i.putExtra("url", imgUrl);
+        startActivity(i, options.toBundle());
     }
 
 

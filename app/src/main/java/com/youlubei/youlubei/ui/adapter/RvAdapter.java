@@ -59,7 +59,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
             holder.content.setText(rvBean.getContent());
             holder.layout.getLayoutParams().width = Utils.getScreenWidth(context);
             if (rvBean.isFinish()) {
-                switch (rvBean.getFinishColor()){
+                switch (rvBean.getFinishColor()) {
                     case 0:
                         holder.layout.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.roug_word_finish_background, null));
                         break;
@@ -120,7 +120,21 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                 holder.content.setTextColor(context.getResources().getColor(R.color.white));
                 holder.set.setVisibility(View.VISIBLE);
                 holder.delete.setText("完成");
-                holder.imageView.setImageResource(R.mipmap.background);
+                switch (holder.content.getText().toString()) {
+                    case "背单词":
+                        holder.imageView.setImageResource(R.drawable.word);
+                        break;
+                    case "阅读":
+                        holder.imageView.setImageResource(R.drawable.read);
+                        break;
+                    case "学习":
+                        holder.imageView.setImageResource(R.drawable.study);
+                        break;
+                    case "运动":
+                        holder.imageView.setImageResource(R.drawable.sport);
+                        break;
+                }
+
             }
 
             //item正文点击事件
@@ -204,17 +218,16 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         mList.remove(position);
         notifyItemRemoved(position);
         if (position != mList.size()) {
-            notifyItemRangeChanged(0, mList.size() );
+            notifyItemRangeChanged(0, mList.size());
         }
-        for (RvBean a:mList
-             ) {
-            if (!a.isFinish()){
+        for (RvBean a : mList
+        ) {
+            if (!a.isFinish()) {
                 return;
             }
         }
         ionSlidingViewClickListener.onAllFinish();
     }
-
 
 
     /**
@@ -258,19 +271,18 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         return mMenu != null;
     }
 
-    public void saveData(){
-        SharedPreferenceUtil.getInstance().put(context,"data0",new Gson().toJson(mList.get(0)));
-        SharedPreferenceUtil.getInstance().put(context,"data1",new Gson().toJson(mList.get(1)));
-        SharedPreferenceUtil.getInstance().put(context,"data2",new Gson().toJson(mList.get(2)));
-        SharedPreferenceUtil.getInstance().put(context,"data3",new Gson().toJson(mList.get(3)));
+    public void saveData() {
+        SharedPreferenceUtil.getInstance().put(context, "data0", new Gson().toJson(mList.get(0)));
+        SharedPreferenceUtil.getInstance().put(context, "data1", new Gson().toJson(mList.get(1)));
+        SharedPreferenceUtil.getInstance().put(context, "data2", new Gson().toJson(mList.get(2)));
+        SharedPreferenceUtil.getInstance().put(context, "data3", new Gson().toJson(mList.get(3)));
     }
 
 
-    public int checkFinish(){
-        int count =0;
+    public int checkFinish() {
+        int count = 0;
         for (RvBean rvBean : mList) {
-            if (rvBean.isFinish())
-            {
+            if (rvBean.isFinish()) {
                 count++;
             }
         }

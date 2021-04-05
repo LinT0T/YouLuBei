@@ -1,9 +1,12 @@
 package com.youlubei.youlubei.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
+
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -53,5 +56,16 @@ public class Utils {
         return cal.getTimeInMillis() - System.currentTimeMillis();
     }
 
+    public static void initBar(Activity activity) {
+        ImmersionBar.with(activity).init();
+        ImmersionBar.with(activity)
+                .transparentStatusBar()
+                .transparentNavigationBar()
+                .fullScreen(true)
+                .statusBarDarkFont(true)
+                .navigationBarDarkIcon(true)
+                .statusBarColor("#FBFBFB")
+                .navigationBarColor("#FBFBFB");
+    }
 
 }

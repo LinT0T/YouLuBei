@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.bean.BackgroundBean;
+import com.youlubei.youlubei.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
 
         textView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.INVISIBLE);
-
+        Utils.initBar(this);
         loadBackground(this);
         intent = new Intent(SplashActivity.this, MainActivity.class);
 
