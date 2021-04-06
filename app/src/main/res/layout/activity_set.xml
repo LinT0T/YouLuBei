@@ -100,7 +100,7 @@
         android:id="@+id/btn_set"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/roug_delete_background"
+        android:background="@drawable/button_finish_background"
         android:text="完 成"
         android:textSize="20sp"
         android:textStyle="bold"

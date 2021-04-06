@@ -46,7 +46,7 @@ import okhttp3.Response;
 
 public class SetActivity extends AppCompatActivity {
     private ImageView backgroundImageView, mImageView;
-    private TextView contentChTextView, contentEngTextView, geTextView;
+    private TextView contentChTextView, contentEngTextView, geTextView,titleTextView;
     private EditText numEditText;
     private Button mButton;
 
@@ -60,6 +60,7 @@ public class SetActivity extends AppCompatActivity {
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         geTextView = findViewById(R.id.tv_ge_set);
+        titleTextView = findViewById(R.id.tv_title_set);
         numEditText = findViewById(R.id.edt_set);
         mButton = findViewById(R.id.btn_set);
         mImageView = findViewById(R.id.img_set);
@@ -72,6 +73,7 @@ public class SetActivity extends AppCompatActivity {
 
         String type = "";
         type = getIntent().getStringExtra("type");
+        titleTextView.setText(type);
         String num = getIntent().getStringExtra("num");
         numEditText.setHint(num);
         switch (type) {
