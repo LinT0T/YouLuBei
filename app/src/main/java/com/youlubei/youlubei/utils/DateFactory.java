@@ -1,4 +1,4 @@
-package com.youlubei.youlubei.ui.view;
+package com.youlubei.youlubei.utils;
 
 import com.youlubei.youlubei.bean.Day;
 
