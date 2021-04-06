@@ -26,7 +26,7 @@ public class BackgroundBean {
         private String enddate;
         private String url;
         private String urlbase;
-        private String copyright;
+        private String copyright = "";
         private String copyrightlink;
         private String title;
         private String quiz;

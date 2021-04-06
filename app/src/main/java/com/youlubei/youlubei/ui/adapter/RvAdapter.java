@@ -17,8 +17,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.youlubei.youlubei.ui.ContributionActivity;
-import com.youlubei.youlubei.ui.MainActivity;
 import com.youlubei.youlubei.utils.LeftSlideView;
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
@@ -32,6 +30,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     private List<RvBean> mList;
     private IonSlidingViewClickListener mIDeleteBtnClickListener;
     private IonSlidingViewClickListener mISetBtnClickListener;
+    private IonSlidingViewClickListener ionSlidingViewClickListener;
 
     private LeftSlideView mMenu = null;
 
@@ -40,7 +39,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         this.mList = mList;
         mIDeleteBtnClickListener = (IonSlidingViewClickListener) context;
         mISetBtnClickListener = (IonSlidingViewClickListener) context;
-
+        ionSlidingViewClickListener = (IonSlidingViewClickListener) context;
     }
 
     @NonNull
@@ -121,7 +120,21 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                 holder.content.setTextColor(context.getResources().getColor(R.color.white));
                 holder.set.setVisibility(View.VISIBLE);
                 holder.delete.setText("完成");
-                holder.imageView.setImageResource(R.mipmap.background);
+                switch (holder.content.getText().toString()) {
+                    case "背单词":
+                        holder.imageView.setImageResource(R.drawable.word);
+                        break;
+                    case "阅读":
+                        holder.imageView.setImageResource(R.drawable.read);
+                        break;
+                    case "学习":
+                        holder.imageView.setImageResource(R.drawable.study);
+                        break;
+                    case "运动":
+                        holder.imageView.setImageResource(R.drawable.sport);
+                        break;
+                }
+
             }
 
             //item正文点击事件
@@ -169,6 +182,28 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         return mList.size();
     }
 
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView imageView;
+        //        private TextView title;
+        private TextView content;
+        private TextView set;
+        private TextView delete;
+        private ViewGroup layout;
+        private View line;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.img_item);
+            set = itemView.findViewById(R.id.tv_set);
+            delete = itemView.findViewById(R.id.tv_delete);
+            layout = itemView.findViewById(R.id.layout_content);
+            content = itemView.findViewById(R.id.tv_content_item);
+            line = itemView.findViewById(R.id.line_item);
+            ((LeftSlideView) itemView).setSlidingButtonListener(RvAdapter.this);
+        }
+    }
+
+
     /**
      * 删除item
      *
@@ -183,19 +218,17 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         mList.remove(position);
         notifyItemRemoved(position);
         if (position != mList.size()) {
-            notifyItemRangeChanged(position, mList.size() - position);
+            notifyItemRangeChanged(0, mList.size());
         }
-    }
-
-    public int checkFinish() {
-        int count = 0;
-        for (RvBean rvBean : mList) {
-            if (rvBean.isFinish()) {
-                count++;
+        for (RvBean a : mList
+        ) {
+            if (!a.isFinish()) {
+                return;
             }
         }
-        return count;
+        ionSlidingViewClickListener.onAllFinish();
     }
+
 
     /**
      * 删除菜单打开信息接收
@@ -204,6 +237,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     public void onMenuIsOpen(View view) {
         mMenu = (LeftSlideView) view;
     }
+
 
     /**
      * 滑动或者点击了Item监听
@@ -244,6 +278,17 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         SharedPreferenceUtil.getInstance().put(context, "data3", new Gson().toJson(mList.get(3)));
     }
 
+
+    public int checkFinish() {
+        int count = 0;
+        for (RvBean rvBean : mList) {
+            if (rvBean.isFinish()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     /**
      * 注册接口的方法：点击事件。在Mactivity.java实现这些方法。
      */
@@ -253,27 +298,8 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
         void onDeleteBtnCilck(View view, int position, boolean isFinish);//点击“删除”
 
         void onSetBtnCilck(View view, int position);//点击“设置”
-    }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        //        private TextView title;
-        private TextView content;
-        private TextView set;
-        private TextView delete;
-        private ViewGroup layout;
-        private View line;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.img_item);
-            set = itemView.findViewById(R.id.tv_set);
-            delete = itemView.findViewById(R.id.tv_delete);
-            layout = itemView.findViewById(R.id.layout_content);
-            content = itemView.findViewById(R.id.tv_content_item);
-            line = itemView.findViewById(R.id.line_item);
-            ((LeftSlideView) itemView).setSlidingButtonListener(RvAdapter.this);
-        }
+        void onAllFinish();//所有任务完成
     }
 
 }

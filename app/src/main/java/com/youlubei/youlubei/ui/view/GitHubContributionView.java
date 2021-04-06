@@ -44,12 +44,12 @@ public class GitHubContributionView extends View {
     /**
      * 星期
      **/
-    private String[] weeks = new String[]{"Mon", "Wed", "Fri", "Sun"};
+    private String[] weeks = new String[]{"周一", "周三", "周五", "周日"};
     /**
      * 月份
      **/
     private String[] months =
-            new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+            new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
     /**
      * 默认的padding,绘制的时候不贴边画
      **/
@@ -106,7 +106,7 @@ public class GitHubContributionView extends View {
         //文字画笔
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(Color.GRAY);
+        textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(30);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
@@ -220,9 +220,13 @@ public class GitHubContributionView extends View {
             day.startY = startY;
             day.endX = endX;
             day.endY = endY;
+
             //给画笔设置当前天的颜色
             boxPaint.setColor(day.colour);
             canvas.drawRect(startX, startY, endX, endY, boxPaint);
+            textPaint.setColor(Color.GRAY);
+            canvas.drawText(String.valueOf(day.date), (startX + endX) / 2 -20, (endY + startY) / 2 +10, textPaint);
+            textPaint.setColor(Color.WHITE);
         }
         boxPaint.setColor(DEFAULT_BOX_COLOUR);//恢复默认颜色
     }
@@ -242,10 +246,10 @@ public class GitHubContributionView extends View {
             }
         }
         //依次画出星期文本,坐标点x=padding-文本长度-文本和方格的间隙,y坐标随行数变化
-        canvas.drawText(weeks[0], padding - textLength - 2, padding + boxSide - metrics.descent, textPaint);
-        canvas.drawText(weeks[1], padding - textLength - 2, padding + 3 * (boxSide + boxInterval) - metrics.descent, textPaint);
-        canvas.drawText(weeks[2], padding - textLength - 2, padding + 5 * (boxSide + boxInterval) - metrics.descent, textPaint);
-        canvas.drawText(weeks[3], padding - textLength - 2, padding + 7 * (boxSide + boxInterval) - metrics.descent, textPaint);
+        canvas.drawText(weeks[0], padding - textLength + 40, padding - 20 + boxSide - metrics.descent, textPaint);
+        canvas.drawText(weeks[1], padding - textLength + 40, padding - 20 + 3 * (boxSide + boxInterval) - metrics.descent, textPaint);
+        canvas.drawText(weeks[2], padding - textLength + 40, padding - 20 + 5 * (boxSide + boxInterval) - metrics.descent, textPaint);
+        canvas.drawText(weeks[3], padding - textLength + 40, padding - 20 + 7 * (boxSide + boxInterval) - metrics.descent, textPaint);
     }
 
     /**
@@ -255,13 +259,13 @@ public class GitHubContributionView extends View {
      */
     private void drawTag(Canvas canvas) {
         //首先计算出两个文本的长度
-        float moreLength = textPaint.measureText("More");
-        float lessLength = textPaint.measureText("Less");
+        float moreLength = textPaint.measureText("多");
+        float lessLength = textPaint.measureText("少");
         //画 More 文本,x坐标=padding+（列数+1）*（方格边长+方格间隙）-一个方格间隙-文本长度
         float moreX = padding + (column + 1) * (boxSide + boxInterval) - boxInterval - moreLength;
         //y坐标=padding+（方格行数+1,和表格底部有些距离）*（方格边长+方格间隙）+字体的ascent高度
         float moreY = padding + 8 * (boxSide + boxInterval) + Math.abs(metrics.ascent);
-        canvas.drawText("More", moreX, moreY, textPaint);
+        canvas.drawText("多", moreX, moreY, textPaint);
         //画深浅色块,坐标根据上面的More依次计算就可以了
         float interval = boxSide - 2;//文字和色块间的距离
         float leftX = moreX - interval - boxSide;
@@ -273,7 +277,7 @@ public class GitHubContributionView extends View {
             canvas.drawRect(leftX - i * (boxSide + boxInterval), topY, rightX - i * (boxSide + boxInterval), bottomY, boxPaint);
         }
         //最后画 Less 文本,原理同上
-        canvas.drawText("Less", leftX - 4 * (boxSide + boxInterval) - interval - lessLength, moreY, textPaint);
+        canvas.drawText("少", leftX - 4 * (boxSide + boxInterval) - interval - lessLength, moreY, textPaint);
     }
 
 
@@ -351,7 +355,7 @@ public class GitHubContributionView extends View {
             //绘制文字,x=leftX+文字和矩形间距,y=topY+文字和矩形上面间距+文字顶到基线高度
             canvas.drawText(popupInfo, leftX + toastSide, topY + toastSide + Math.abs(metrics.ascent), textPaint);
             clickDay = null;//重新置空，保证点击方格外信息消失
-            textPaint.setColor(Color.GRAY);//恢复画笔颜色
+            textPaint.setColor(Color.WHITE);//恢复画笔颜色
         }
     }
 

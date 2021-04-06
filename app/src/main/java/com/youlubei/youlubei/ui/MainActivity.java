@@ -1,9 +1,18 @@
 package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.util.Log;
+import android.util.Pair;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,14 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.gyf.immersionbar.ImmersionBar;
 import com.plattysoft.leonids.ParticleSystem;
 import com.youlubei.youlubei.R;
-import com.youlubei.youlubei.ui.adapter.RvAdapter;
 import com.youlubei.youlubei.bean.BackgroundBean;
 import com.youlubei.youlubei.bean.ContentBean;
 import com.youlubei.youlubei.bean.RvBean;
+import com.youlubei.youlubei.ui.adapter.RvAdapter;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
+import com.youlubei.youlubei.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,11 +64,32 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
     private ConstraintLayout layout;
+    private View container;
+    private String imgUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        Slide slide = new Slide();
+//        slide.setDuration(500);
+//        getWindow().setExitTransition(slide);
+//        getWindow().setReenterTransition(slide);
+
+        Transition transition = new TransitionSet()
+                .addTransition(new Slide(Gravity.START)
+                        .addTarget(R.id.tv_title_main)
+                        .addTarget(R.id.tv_content_ch_main)
+                        .addTarget(R.id.tv_content_en_main)
+
+                )
+                .addTransition(new Slide(Gravity.BOTTOM).addTarget(R.id.root_item))
+                .addTransition(new Fade().addTarget(R.id.img_background_main))
+                .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in))
+                .setDuration(500);
+
+        getWindow().setExitTransition(transition);
+
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
@@ -67,14 +97,23 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
         layout = findViewById(R.id.layout_root);
-        List<RvBean> list = new ArrayList<RvBean>();
+        container = findViewById(R.id.main_container);
+        List<RvBean> list = new ArrayList<>();
+
+        initData(list);
+
+    }
+
+    private void initData(List<RvBean> list) {
         String firstUse = (String) SharedPreferenceUtil.getInstance().get(this, "first_use", "first");
         assert firstUse != null;
         RvBean rvBean0;
         RvBean rvBean1;
         RvBean rvBean2;
         RvBean rvBean3;
-        if (firstUse.equals("first")) {
+        int dayOfYearInData = (int) SharedPreferenceUtil.getInstance().get(this, "date", -1);
+        int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        if (firstUse.equals("first") || dayOfYear != dayOfYearInData) {
             rvBean0 = new RvBean("背单词",
                     0,
                     false);
@@ -88,12 +127,18 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                     3,
                     false);
             SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
+
+            showToast();
+
         } else {
             rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
             rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
             rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
             rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
         }
+
+        SharedPreferenceUtil.getInstance().put(this, "date", Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
+
         list.add(rvBean0);
         list.add(rvBean1);
         list.add(rvBean2);
@@ -105,11 +150,37 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new OvershootInLeftAnimator());
         Objects.requireNonNull(recyclerView.getItemAnimator()).setAddDuration(300);
-        initBar();
-        loadBackground(this);
+        Utils.initBar(this);
+        imgUrl = getIntent().getStringExtra("url");
+        if (imgUrl != null) {
+            Glide.with(this).load(imgUrl).into(backgroundImageView);
+        } else {
+            loadBackground(this);
+        }
         getDate(titleTextView);
         loadContent();
         clockInListener();
+    }
+
+    private void showToast() {
+        Toast toast = new Toast(getApplicationContext());
+
+        //创建一个填充物,用于填充Toast
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        //填充物来自的xml文件,在这个改成一个view
+        //实现xml到view的转变哦
+        View view = inflater.inflate(R.layout.toast, null);
+
+        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
+        TextView textView1 = view.findViewById(R.id.tv_toast);
+
+        //把填充物放进toast
+        toast.setView(view);
+        toast.setDuration(Toast.LENGTH_SHORT);
+
+        //展示toast
+        toast.show();
     }
 
     private void getDate(TextView tv) {
@@ -127,17 +198,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
     }
 
-    private void initBar() {
-        ImmersionBar.with(this).init();
-        ImmersionBar.with(this)
-                .transparentStatusBar()
-                .transparentNavigationBar()
-                .fullScreen(true)
-                .statusBarDarkFont(true)
-                .navigationBarDarkIcon(true)
-                .statusBarColor("#FBFBFB")
-                .navigationBarColor("#FBFBFB");
-    }
 
     private void loadBackground(Activity activity) {
         String url = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
@@ -151,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.d(TAG, "onFailure: ");
                 runOnUiThread(() -> {
-//                        backgroundImageView.setImageResource(R.mipmap.background);
+                    backgroundImageView.setImageResource(R.mipmap.background);
                 });
 
             }
@@ -207,7 +267,8 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
                 intent.putExtra("level", rvAdapter.checkFinish());
-                startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+                startActivity(intent,options.toBundle());
             }
         });
     }
@@ -236,8 +297,12 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     public void onSetBtnCilck(View view, int position) {
 
         //“设置”点击事件的代码逻辑
-        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
-        System.out.println("请设置");
+//        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
+        Intent i = new Intent(this, SetActivity.class);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        i.putExtra("url", imgUrl);
+        startActivity(i, options.toBundle());
+        rvAdapter.closeMenu();
     }
 
 
@@ -260,6 +325,44 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
     }
 
+    @Override
+    public void onAllFinish() {
+        new ParticleSystem(this, 1000, R.drawable.flower, 3000)
+                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 180)
+                .setRotationSpeedRange(-30, 30)
+                .setAcceleration(0.001f, 90)
+                .emit(container, 30, 3000);
+
+//        new ParticleSystem(this, 1000, R.drawable.flower, 10000)
+//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
+//                .setRotationSpeed(60)
+//                .setAcceleration(0.00005f, 90)
+//                .emit(0, -100, 30, 10000);
+//        new ParticleSystem(this, 1000, R.drawable.flower, 10000)
+//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
+//                .setRotationSpeed(60)
+//                .setAcceleration(0.00005f, 90)
+//                .emit(Utils.getScreenWidth(this), -100, 30, 10000);
+        Toast toast = new Toast(getApplicationContext());
+
+        //创建一个填充物,用于填充Toast
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        //填充物来自的xml文件,在这个改成一个view
+        //实现xml到view的转变哦
+        View view = inflater.inflate(R.layout.toast, null);
+
+        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
+        TextView textView1 = view.findViewById(R.id.tv_toast);
+
+        //把填充物放进toast
+        toast.setView(view);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        textView1.setText("赞！任务全部完成啦");
+
+        //展示toast
+        toast.show();
+    }
 
     @Override
     protected void onPause() {

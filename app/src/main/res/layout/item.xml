@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:overScrollMode="never"
+    android:id="@+id/root_item"
     android:layout_height="75dp"
     android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp"
@@ -82,11 +83,10 @@
 
             <ImageView
                 android:id="@+id/img_item"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="15dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

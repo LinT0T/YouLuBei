@@ -43,7 +43,7 @@ public class Day implements Serializable {
     @Override
     public String toString() {
         //这里直接在弹出框中显示
-        return "" + year + "年" + month + "月" + date + "日周" + week + "," + contribution + "次";
+        return "" + year + "年" + month + "月" + date + "日周" + week + ",完成" + contribution + "个任务";
     }
 }
 

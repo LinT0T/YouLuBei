@@ -7,11 +7,22 @@ import androidx.lifecycle.Observer;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.ui.view.GitHubContributionView;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
+import com.youlubei.youlubei.utils.Utils;
 
 import java.time.Month;
 import java.util.Calendar;
@@ -32,8 +43,20 @@ public class ContributionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contrbution);
+
+
         contributionView = findViewById(R.id.contribution_chart);
+        Animation animation = new ScaleAnimation(2f,1f,2f,1f);
+        animation.setDuration(500);
+        Animation animation1 = new AlphaAnimation(0f,1f);
+        animation1.setDuration(500);
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(animation);
+        animationSet.addAnimation(animation1);
+        animationSet.setDuration(1000);
+        contributionView.startAnimation(animationSet);
         sharedPreferences = SharedPreferenceUtil.getInstance();
+        Utils.initBar(this);
         Intent intent = getIntent();
         calendar = Calendar.getInstance();
         int current = intent.getIntExtra("level", 0);
