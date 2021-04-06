@@ -12,4 +12,6 @@
     <color name="sport">#E91E63</color>
     <color name="read">#9C27B0</color>
     <color name="study">#673AB7</color>
+    <color name="warning">@android:color/holo_red_dark</color>
+    <color name="easy">@android:color/holo_orange_dark</color>
 </resources>

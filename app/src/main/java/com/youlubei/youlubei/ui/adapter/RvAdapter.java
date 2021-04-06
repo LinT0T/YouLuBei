@@ -73,8 +73,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                         holder.layout.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.roug_sport_finish_background, null));
                         break;
                 }
-
+                holder.num.setVisibility(View.GONE);
                 holder.set.setVisibility(View.GONE);
+                holder.ge.setVisibility(View.GONE);
                 TranslateAnimation animation = new TranslateAnimation(Animation.ABSOLUTE, -(Utils.getScreenWidth(context) + 150),
                         Animation.ABSOLUTE, 0f,
                         Animation.ABSOLUTE, 0f,
@@ -116,6 +117,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
 
                 holder.delete.setText("恢复");
             } else {
+                holder.num.setVisibility(View.VISIBLE);
+                holder.ge.setVisibility(View.VISIBLE);
+                holder.num.setText(String.valueOf(rvBean.getNum()));
                 holder.layout.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.roug_background, null));
                 holder.content.setTextColor(context.getResources().getColor(R.color.white));
                 holder.set.setVisibility(View.VISIBLE);
@@ -123,15 +127,23 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                 switch (holder.content.getText().toString()) {
                     case "背单词":
                         holder.imageView.setImageResource(R.drawable.word);
+                        holder.num.setTextColor(context.getResources().getColor(R.color.word));
+                        holder.ge.setText("个");
                         break;
                     case "阅读":
                         holder.imageView.setImageResource(R.drawable.read);
+                        holder.num.setTextColor(context.getResources().getColor(R.color.read));
+                        holder.ge.setText("分钟");
                         break;
                     case "学习":
                         holder.imageView.setImageResource(R.drawable.study);
+                        holder.num.setTextColor(context.getResources().getColor(R.color.study));
+                        holder.ge.setText("分钟");
                         break;
                     case "运动":
                         holder.imageView.setImageResource(R.drawable.sport);
+                        holder.num.setTextColor(context.getResources().getColor(R.color.sport));
+                        holder.ge.setText("分钟");
                         break;
                 }
 
@@ -159,7 +171,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                 @Override
                 public void onClick(View view) {
                     int n = holder.getLayoutPosition();
-                    mISetBtnClickListener.onSetBtnCilck(view, n);
+                    mISetBtnClickListener.onSetBtnCilck(view, position, mList.get(position));
                 }
             });
 
@@ -183,13 +195,15 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        private final ImageView imageView;
         //        private TextView title;
-        private TextView content;
-        private TextView set;
-        private TextView delete;
-        private ViewGroup layout;
-        private View line;
+        private final TextView content;
+        private final TextView set;
+        private final TextView delete;
+        private final ViewGroup layout;
+        private final View line;
+        private final TextView num;
+        private final TextView ge;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -199,6 +213,8 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
             layout = itemView.findViewById(R.id.layout_content);
             content = itemView.findViewById(R.id.tv_content_item);
             line = itemView.findViewById(R.id.line_item);
+            num = itemView.findViewById(R.id.tv_num_item);
+            ge = itemView.findViewById(R.id.tv_ge_item);
             ((LeftSlideView) itemView).setSlidingButtonListener(RvAdapter.this);
         }
     }
@@ -227,6 +243,12 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
             }
         }
         ionSlidingViewClickListener.onAllFinish();
+    }
+
+    public void changeNum(int position, String num) {
+        mList.get(position).setNum(Integer.parseInt(num));
+//        notifyItemChanged(position);
+        notifyDataSetChanged();
     }
 
 
@@ -297,7 +319,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
 
         void onDeleteBtnCilck(View view, int position, boolean isFinish);//点击“删除”
 
-        void onSetBtnCilck(View view, int position);//点击“设置”
+        void onSetBtnCilck(View view, int position, RvBean rvBean);//点击“设置”
 
         void onAllFinish();//所有任务完成
     }

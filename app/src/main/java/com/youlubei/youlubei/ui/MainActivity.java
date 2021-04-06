@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -116,16 +117,20 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         if (firstUse.equals("first") || dayOfYear != dayOfYearInData) {
             rvBean0 = new RvBean("背单词",
                     0,
-                    false);
+                    false,
+                    30);
             rvBean1 = new RvBean("阅读",
                     1,
-                    false);
+                    false,
+                    30);
             rvBean2 = new RvBean("学习",
                     2,
-                    false);
+                    false,
+                    120);
             rvBean3 = new RvBean("运动",
                     3,
-                    false);
+                    false,
+                    30);
             SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
 
             showToast();
@@ -268,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
                 intent.putExtra("level", rvAdapter.checkFinish());
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
-                startActivity(intent,options.toBundle());
+                startActivity(intent, options.toBundle());
             }
         });
     }
@@ -291,20 +296,35 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
      * item的左滑设置
      *
      * @param view
-     * @param position
+     * @param rvBean
      */
     @Override
-    public void onSetBtnCilck(View view, int position) {
+    public void onSetBtnCilck(View view, int position, RvBean rvBean) {
 
         //“设置”点击事件的代码逻辑
 //        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, SetActivity.class);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         i.putExtra("url", imgUrl);
-        startActivity(i, options.toBundle());
+        i.putExtra("type", rvBean.getContent());
+        i.putExtra("num", String.valueOf(rvBean.getNum()));
+        i.putExtra("position", position);
+        startActivityForResult(i, 1, options.toBundle());
         rvAdapter.closeMenu();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //此处可以根据两个Code进行判断，本页面和结果页面跳过来的值
+        if (requestCode == 1 && resultCode == 3) {
+            String result = data.getStringExtra("result");
+            int position = data.getIntExtra("position",-1);
+            if (!result.equals("") && position != -1) {
+                rvAdapter.changeNum(position,result);
+            }
+        }
+    }
 
     /**
      * item的左滑删除
