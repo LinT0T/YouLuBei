@@ -30,7 +30,7 @@ public class Day implements Serializable {
     /**
      * 默认颜色,根据提交次数改变
      **/
-    public int colour = 0xFFEEEEEE;
+    public int colour = 0xFFFFFFFF;
 
     /**
      * 方格坐标，左上点，右下点，确定矩形范围
