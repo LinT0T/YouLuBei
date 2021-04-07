@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gyf.immersionbar.ImmersionBar;
+import com.youlubei.youlubei.R;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -66,6 +71,27 @@ public class Utils {
                 .navigationBarDarkIcon(true)
                 .statusBarColor("#FBFBFB")
                 .navigationBarColor("#FBFBFB");
+    }
+
+    public static void showToast(Context context, String text) {
+        Toast toast = new Toast(context);
+
+        //创建一个填充物,用于填充Toast
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        //填充物来自的xml文件,在这个改成一个view
+        //实现xml到view的转变哦
+        View view = inflater.inflate(R.layout.toast, null);
+
+        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
+        TextView textView1 = view.findViewById(R.id.tv_toast);
+        textView1.setText(text);
+        //把填充物放进toast
+        toast.setView(view);
+        toast.setDuration(Toast.LENGTH_SHORT);
+
+        //展示toast
+        toast.show();
     }
 
 }

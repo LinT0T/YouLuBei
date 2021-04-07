@@ -78,24 +78,16 @@ public class SetActivity extends AppCompatActivity {
         numEditText.setHint(num);
         switch (type) {
             case "背单词":
-                geTextView.setText("个");
-                numEditText.setTextColor(getResources().getColor(R.color.word));
-                mImageView.setImageResource(R.drawable.word);
+                initView("个", R.color.word, R.drawable.word);
                 break;
             case "阅读":
-                geTextView.setText("分钟");
-                numEditText.setTextColor(getResources().getColor(R.color.read));
-                mImageView.setImageResource(R.drawable.read);
+                initView("分钟", R.color.read, R.drawable.read);
                 break;
             case "学习":
-                geTextView.setText("分钟");
-                numEditText.setTextColor(getResources().getColor(R.color.study));
-                mImageView.setImageResource(R.drawable.study);
+                initView("分钟", R.color.study, R.drawable.study);
                 break;
             case "运动":
-                geTextView.setText("分钟");
-                numEditText.setTextColor(getResources().getColor(R.color.sport));
-                mImageView.setImageResource(R.drawable.sport);
+                initView("分钟", R.color.sport, R.drawable.sport);
                 break;
         }
 
@@ -108,68 +100,26 @@ public class SetActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                switch (finalType) {
-                    case "背单词":
-                        if (Integer.parseInt(String.valueOf(s)) > 120) {
-                            mButton.setText("每日任务过难，是否确定？");
-                            mButton.setTextColor(getResources().getColor(R.color.warning));
-                        } else {
-                            if (Integer.parseInt(String.valueOf(s)) < 10) {
-                                mButton.setText("太简单啦，是否确定？");
-                                mButton.setTextColor(getResources().getColor(R.color.easy));
-                            } else {
-                                mButton.setText("完成");
-                                mButton.setTextColor(getResources().getColor(R.color.white));
-                            }
-
+                try {
+                    System.out.println("haha    " + s);
+                        switch (finalType) {
+                            case "背单词":
+                                setButton(s, 120, 10);
+                                break;
+                            case "阅读":
+                                setButton(s, 180, 30);
+                                break;
+                            case "学习":
+                                setButton(s, 480, 30);
+                                break;
+                            case "运动":
+                                setButton(s, 300, 10);
+                                break;
                         }
-                        break;
-                    case "阅读":
-                        if (Integer.parseInt(String.valueOf(s)) > 180) {
-                            mButton.setText("每日任务过难，是否确定？");
-                            mButton.setTextColor(getResources().getColor(R.color.warning));
-                        } else {
-                            if (Integer.parseInt(String.valueOf(s)) < 30) {
-                                mButton.setText("太简单啦，是否确定？");
-                                mButton.setTextColor(getResources().getColor(R.color.easy));
-                            } else {
-                                mButton.setText("完成");
-                                mButton.setTextColor(getResources().getColor(R.color.white));
-                            }
-
-                        }
-                        break;
-                    case "学习":
-                        if (Integer.parseInt(String.valueOf(s)) > 480) {
-                            mButton.setText("每日任务过难，是否确定？");
-                            mButton.setTextColor(getResources().getColor(R.color.warning));
-                        } else {
-                            if (Integer.parseInt(String.valueOf(s)) < 30) {
-                                mButton.setText("太简单啦，是否确定？");
-                                mButton.setTextColor(getResources().getColor(R.color.easy));
-                            } else {
-                                mButton.setText("完成");
-                                mButton.setTextColor(getResources().getColor(R.color.white));
-                            }
-
-                        }
-                        break;
-                    case "运动":
-                        if (Integer.parseInt(String.valueOf(s)) > 300) {
-                            mButton.setText("每日任务过难，是否确定？");
-                            mButton.setTextColor(getResources().getColor(R.color.warning));
-                        } else {
-                            if (Integer.parseInt(String.valueOf(s)) < 10) {
-                                mButton.setText("太简单啦，是否确定？");
-                                mButton.setTextColor(getResources().getColor(R.color.easy));
-                            } else {
-                                mButton.setText("完成");
-                                mButton.setTextColor(getResources().getColor(R.color.white));
-                            }
-
-                        }
-                        break;
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
@@ -193,6 +143,34 @@ public class SetActivity extends AppCompatActivity {
         setAnim();
 
         loadContent();
+    }
+
+    private void setButton(CharSequence s, int max, int min) {
+        if (s.equals("")) {
+            return;
+        }
+            if (Integer.parseInt(String.valueOf(s)) > max) {
+                setButtonTextAndColor("每日任务过难，是否确定？", R.color.warning);
+            } else {
+                if (Integer.parseInt(String.valueOf(s)) < min) {
+                    setButtonTextAndColor("太简单啦，是否确定？", R.color.easy);
+                } else {
+                    setButtonTextAndColor("完成", R.color.white);
+                }
+
+            }
+
+    }
+
+    private void setButtonTextAndColor(String s2, int p) {
+        mButton.setText(s2);
+        mButton.setTextColor(getResources().getColor(p));
+    }
+
+    private void initView(String text, int p, int p2) {
+        geTextView.setText(text);
+        numEditText.setTextColor(getResources().getColor(p));
+        mImageView.setImageResource(p2);
     }
 
     private void setAnim() {

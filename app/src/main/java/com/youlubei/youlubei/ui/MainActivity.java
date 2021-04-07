@@ -2,6 +2,7 @@ package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Explode;
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                     30);
             SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
 
-            showToast();
+            Utils.showToast(this, "任务更新了哦");
 
         } else {
             if (dayOfYear != dayOfYearInData) {
@@ -191,26 +192,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         clockInListener();
     }
 
-    private void showToast() {
-        Toast toast = new Toast(getApplicationContext());
-
-        //创建一个填充物,用于填充Toast
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        //填充物来自的xml文件,在这个改成一个view
-        //实现xml到view的转变哦
-        View view = inflater.inflate(R.layout.toast, null);
-
-        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
-        TextView textView1 = view.findViewById(R.id.tv_toast);
-
-        //把填充物放进toast
-        toast.setView(view);
-        toast.setDuration(Toast.LENGTH_SHORT);
-
-        //展示toast
-        toast.show();
-    }
 
     private void getDate(TextView tv) {
         Calendar calendar = Calendar.getInstance();
@@ -387,25 +368,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 .setRotationSpeed(60)
                 .setAcceleration(0.00005f, 90)
                 .emit(Utils.getScreenWidth(this), -100, 30, 1500);
-        Toast toast = new Toast(getApplicationContext());
-
-        //创建一个填充物,用于填充Toast
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        //填充物来自的xml文件,在这个改成一个view
-        //实现xml到view的转变哦
-        View view = inflater.inflate(R.layout.toast, null);
-
-        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
-        TextView textView1 = view.findViewById(R.id.tv_toast);
-
-        //把填充物放进toast
-        toast.setView(view);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        textView1.setText("赞！任务全部完成啦");
-
-        //展示toast
-        toast.show();
+        Utils.showToast(this, "赞！任务全部完成啦");
     }
 
     @Override

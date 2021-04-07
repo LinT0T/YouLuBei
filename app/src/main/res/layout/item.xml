@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--item布局，自定义View-->
-<com.youlubei.youlubei.utils.LeftSlideView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.youlubei.youlubei.ui.view.LeftSlideView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_item"
     android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_toEndOf="@+id/tv_set"
-            android:background="@drawable/roug_delete_background"
+            android:background="@drawable/button_finish_background"
             android:gravity="center"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
@@ -72,13 +72,13 @@
                 android:id="@+id/tv_num_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="80dp"
                 android:text="30"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_content_item"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -120,4 +120,4 @@
 
 
     </RelativeLayout>
-</com.youlubei.youlubei.utils.LeftSlideView>
+</com.youlubei.youlubei.ui.view.LeftSlideView>

@@ -17,7 +17,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.youlubei.youlubei.utils.LeftSlideView;
+import com.youlubei.youlubei.ui.view.LeftSlideView;
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
 import com.youlubei.youlubei.utils.Utils;
