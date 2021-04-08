@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -43,8 +44,6 @@ public class ContributionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contrbution);
-
-
         contributionView = findViewById(R.id.contribution_chart);
         Animation animation = new ScaleAnimation(2f,1f,2f,1f);
         animation.setDuration(500);

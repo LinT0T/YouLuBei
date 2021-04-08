@@ -57,7 +57,7 @@ public class GitHubContributionView extends View {
     /**
      * 小方格的默认边长
      **/
-    private float boxSide = (float) 30;
+    private float boxSide = (float) 25;
     /**
      * 文字弹框的大小
      */
