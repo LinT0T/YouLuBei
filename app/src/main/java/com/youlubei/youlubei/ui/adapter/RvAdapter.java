@@ -53,9 +53,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mList != null) {
+            System.out.println(mList);
             holder.line.setVisibility(View.INVISIBLE);
             RvBean rvBean = mList.get(position);
-//            holder.title.setText(rvBean.getTitle());
             holder.content.setText(rvBean.getContent());
             holder.layout.getLayoutParams().width = Utils.getScreenWidth(context);
             if (rvBean.isFinish()) {

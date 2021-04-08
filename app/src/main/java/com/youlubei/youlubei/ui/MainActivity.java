@@ -2,8 +2,11 @@ package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.transition.Explode;
 import android.transition.Fade;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         setContentView(R.layout.activity_main);
 
         initAnim();
-
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
@@ -88,6 +92,44 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
         initData(list);
 
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "TENET";
+            String description = "MESSAGE";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("1", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+            int noFinish = 4 - rvAdapter.checkFinish();
+            String s1,s2;
+            if (noFinish == 0) {
+               s1 = "今天任务都完成啦！";
+                 s2 = "放松一下吧~";
+            } else {
+                 s1 = "今日还有" + noFinish + "个任务没完成哦~";
+                 s2 = "加油！";
+            }
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
+                    .setSmallIcon(R.drawable.ic_good)
+                    .setContentTitle(s1)
+                    .setContentText(s2)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    // Set the intent that will fire when the user taps the notification
+                    .setAutoCancel(true);
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+
+            // notificationId is a unique int for each notification that you must define
+            notificationManagerCompat.notify(1, builder.build());
+
+        }
     }
 
     private void initAnim() {
@@ -138,33 +180,53 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             Utils.showToast(this, "任务更新了哦");
 
         } else {
-            if (dayOfYear != dayOfYearInData) {
-                RvBean bean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                RvBean bean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                RvBean bean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                RvBean bean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+            rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+            rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
+            rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
+            rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
+            if (rvBean0 == null || rvBean1 == null || rvBean2 == null || rvBean3 == null) {
                 rvBean0 = new RvBean("背单词",
                         0,
                         false,
-                        bean0.getNum());
+                        30);
                 rvBean1 = new RvBean("阅读",
                         1,
                         false,
-                        bean1.getNum());
+                        30);
                 rvBean2 = new RvBean("学习",
                         2,
                         false,
-                        bean2.getNum());
+                        120);
                 rvBean3 = new RvBean("运动",
                         3,
                         false,
-                        bean3.getNum());
+                        30);
             } else {
-                rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
-                rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
-                rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
+                if (dayOfYear != dayOfYearInData) {
+                    RvBean bean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                    RvBean bean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                    RvBean bean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                    RvBean bean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                    rvBean0 = new RvBean("背单词",
+                            0,
+                            false,
+                            bean0.getNum());
+                    rvBean1 = new RvBean("阅读",
+                            1,
+                            false,
+                            bean1.getNum());
+                    rvBean2 = new RvBean("学习",
+                            2,
+                            false,
+                            bean2.getNum());
+                    rvBean3 = new RvBean("运动",
+                            3,
+                            false,
+                            bean3.getNum());
+                    Utils.showToast(this, "任务更新了哦");
+                }
             }
+
         }
 
         SharedPreferenceUtil.getInstance().put(this, "date", Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
@@ -173,13 +235,19 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         list.add(rvBean1);
         list.add(rvBean2);
         list.add(rvBean3);
-
         rvAdapter = new RvAdapter(this, list);
         recyclerView.setAdapter(rvAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new OvershootInLeftAnimator());
         Objects.requireNonNull(recyclerView.getItemAnimator()).setAddDuration(300);
+//        int count = 0;
+//        for (RvBean rvBean : list) {
+//            if (rvBean.isFinish()) {
+//                count++;
+//            }
+//        }
+        createNotificationChannel();
         Utils.initBar(this);
         imgUrl = getIntent().getStringExtra("url");
         if (imgUrl != null) {
