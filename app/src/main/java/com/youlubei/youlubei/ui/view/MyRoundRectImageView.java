@@ -1,4 +1,4 @@
-package com.youlubei.youlubei.utils;
+package com.youlubei.youlubei.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

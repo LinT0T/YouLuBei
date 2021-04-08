@@ -14,13 +14,16 @@ public class RvBean implements Serializable {
      * 3: ResourcesCompat.getDrawable(getResources(), R.drawable.roug_sport_finish_background, null)
      */
     private int finishColor;
-    private boolean finish ;
+    private boolean finish;
     private int lastPosition = 0;
+    //每日目标
+    private int num = 0;
 
-    public RvBean(String content,int finishColor,boolean finish) {
+    public RvBean(String content, int finishColor, boolean finish, int num) {
         this.content = content;
         this.finishColor = finishColor;
         this.finish = finish;
+        this.num = num;
     }
 
     public String getTitle() {
@@ -62,6 +65,13 @@ public class RvBean implements Serializable {
 
     public void setLastPosition(int lastPosition) {
         this.lastPosition = lastPosition;
+    }
 
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 }

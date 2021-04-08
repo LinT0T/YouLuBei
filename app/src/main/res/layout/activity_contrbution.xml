@@ -6,12 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".ui.ContributionActivity">
 
+
     <ImageView
         android:id="@+id/img_background_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/clock_in_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/img_back_contribution"
+        android:src="@drawable/back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

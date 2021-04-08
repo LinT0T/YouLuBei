@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,17 +48,34 @@ public class SplashActivity extends AppCompatActivity {
         textView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.INVISIBLE);
         Utils.initBar(this);
-        loadBackground(this);
+        loadBackground(this,imageView);
         intent = new Intent(SplashActivity.this, MainActivity.class);
+        Button button = findViewById(R.id.btn_skip_splash);
+        Handler handler =new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+            }
+        };
+        handler.postDelayed(runnable, 2000);
 
-        new Handler().postDelayed(() -> {
-            startActivity(intent);
-            finish();
-            overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
-        }, 2000);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+                handler.removeCallbacks(runnable);
+                finish();
+                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
+            }
+        });
+
+
     }
 
-    private void loadBackground(Activity activity) {
+    private void loadBackground(Activity activity,ImageView imageView) {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(2, TimeUnit.SECONDS)
                 .writeTimeout(2, TimeUnit.SECONDS)
@@ -72,7 +90,6 @@ public class SplashActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d("splash:", "onFailure: ");
                 runOnUiThread(() -> {
                     imageView.setImageResource(R.mipmap.background);
                 });

@@ -19,6 +19,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
 
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.ui.view.GitHubContributionView;
@@ -32,6 +33,7 @@ import java.util.Calendar;
 public class ContributionActivity extends AppCompatActivity {
 
     private GitHubContributionView contributionView;
+    private ImageView backImageView;
     private SharedPreferenceUtil sharedPreferences;
     private String str = "";
     private int fmonth;
@@ -45,6 +47,13 @@ public class ContributionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contrbution);
         contributionView = findViewById(R.id.contribution_chart);
+        backImageView = findViewById(R.id.img_back_contribution);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishAfterTransition();
+            }
+        });
         Animation animation = new ScaleAnimation(2f,1f,2f,1f);
         animation.setDuration(500);
         Animation animation1 = new AlphaAnimation(0f,1f);

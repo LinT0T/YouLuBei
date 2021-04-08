@@ -2,6 +2,7 @@ package com.youlubei.youlubei.ui;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Explode;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -71,24 +73,8 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Slide slide = new Slide();
-//        slide.setDuration(500);
-//        getWindow().setExitTransition(slide);
-//        getWindow().setReenterTransition(slide);
 
-        Transition transition = new TransitionSet()
-                .addTransition(new Slide(Gravity.START)
-                        .addTarget(R.id.tv_title_main)
-                        .addTarget(R.id.tv_content_ch_main)
-                        .addTarget(R.id.tv_content_en_main)
-
-                )
-                .addTransition(new Slide(Gravity.BOTTOM).addTarget(R.id.root_item))
-                .addTransition(new Fade().addTarget(R.id.img_background_main))
-                .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in))
-                .setDuration(500);
-
-        getWindow().setExitTransition(transition);
+        initAnim();
 
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
@@ -104,6 +90,23 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
     }
 
+    private void initAnim() {
+        Transition transition = new TransitionSet()
+                .addTransition(new Slide(Gravity.START)
+                        .addTarget(R.id.tv_title_main)
+                        .addTarget(R.id.tv_content_ch_main)
+                        .addTarget(R.id.tv_content_en_main)
+
+                )
+                .addTransition(new Slide(Gravity.BOTTOM).addTarget(R.id.root_item))
+                .addTransition(new Fade().addTarget(R.id.img_background_main))
+                .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in))
+                .setDuration(500);
+
+        getWindow().setExitTransition(transition);
+        getWindow().setReenterTransition(transition);
+    }
+
     private void initData(List<RvBean> list) {
         String firstUse = (String) SharedPreferenceUtil.getInstance().get(this, "first_use", "first");
         assert firstUse != null;
@@ -113,28 +116,55 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         RvBean rvBean3;
         int dayOfYearInData = (int) SharedPreferenceUtil.getInstance().get(this, "date", -1);
         int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-        if (firstUse.equals("first") || dayOfYear != dayOfYearInData) {
+        if (firstUse.equals("first")) {
             rvBean0 = new RvBean("背单词",
                     0,
-                    false);
+                    false,
+                    30);
             rvBean1 = new RvBean("阅读",
                     1,
-                    false);
+                    false,
+                    30);
             rvBean2 = new RvBean("学习",
                     2,
-                    false);
+                    false,
+                    120);
             rvBean3 = new RvBean("运动",
                     3,
-                    false);
+                    false,
+                    30);
             SharedPreferenceUtil.getInstance().put(this, "first_use", "false");
 
-            showToast();
+            Utils.showToast(this, "任务更新了哦");
 
         } else {
-            rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-            rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
-            rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
-            rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
+            if (dayOfYear != dayOfYearInData) {
+                RvBean bean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                RvBean bean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                RvBean bean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                RvBean bean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                rvBean0 = new RvBean("背单词",
+                        0,
+                        false,
+                        bean0.getNum());
+                rvBean1 = new RvBean("阅读",
+                        1,
+                        false,
+                        bean1.getNum());
+                rvBean2 = new RvBean("学习",
+                        2,
+                        false,
+                        bean2.getNum());
+                rvBean3 = new RvBean("运动",
+                        3,
+                        false,
+                        bean3.getNum());
+            } else {
+                rvBean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                rvBean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
+                rvBean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
+                rvBean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
+            }
         }
 
         SharedPreferenceUtil.getInstance().put(this, "date", Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
@@ -162,26 +192,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         clockInListener();
     }
 
-    private void showToast() {
-        Toast toast = new Toast(getApplicationContext());
-
-        //创建一个填充物,用于填充Toast
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        //填充物来自的xml文件,在这个改成一个view
-        //实现xml到view的转变哦
-        View view = inflater.inflate(R.layout.toast, null);
-
-        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
-        TextView textView1 = view.findViewById(R.id.tv_toast);
-
-        //把填充物放进toast
-        toast.setView(view);
-        toast.setDuration(Toast.LENGTH_SHORT);
-
-        //展示toast
-        toast.show();
-    }
 
     private void getDate(TextView tv) {
         Calendar calendar = Calendar.getInstance();
@@ -268,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
                 intent.putExtra("level", rvAdapter.checkFinish());
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
-                startActivity(intent,options.toBundle());
+                startActivity(intent, options.toBundle());
             }
         });
     }
@@ -291,20 +301,35 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
      * item的左滑设置
      *
      * @param view
-     * @param position
+     * @param rvBean
      */
     @Override
-    public void onSetBtnCilck(View view, int position) {
+    public void onSetBtnCilck(View view, int position, RvBean rvBean) {
 
         //“设置”点击事件的代码逻辑
 //        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
         Intent i = new Intent(this, SetActivity.class);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         i.putExtra("url", imgUrl);
-        startActivity(i, options.toBundle());
+        i.putExtra("type", rvBean.getContent());
+        i.putExtra("num", String.valueOf(rvBean.getNum()));
+        i.putExtra("position", position);
+        startActivityForResult(i, 1, options.toBundle());
         rvAdapter.closeMenu();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //此处可以根据两个Code进行判断，本页面和结果页面跳过来的值
+        if (requestCode == 1 && resultCode == 3) {
+            String result = data.getStringExtra("result");
+            int position = data.getIntExtra("position", -1);
+            if (!result.equals("") && position != -1) {
+                rvAdapter.changeNum(position, result);
+            }
+        }
+    }
 
     /**
      * item的左滑删除
@@ -327,41 +352,23 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
     @Override
     public void onAllFinish() {
+//        new ParticleSystem(this, 1000, R.drawable.flower, 3000)
+//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 180)
+//                .setRotationSpeedRange(-30, 30)
+//                .setAcceleration(0.001f, 90)
+//                .emit(container, 30, 3000);
+
         new ParticleSystem(this, 1000, R.drawable.flower, 3000)
-                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 180)
-                .setRotationSpeedRange(-30, 30)
-                .setAcceleration(0.001f, 90)
-                .emit(container, 30, 3000);
-
-//        new ParticleSystem(this, 1000, R.drawable.flower, 10000)
-//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
-//                .setRotationSpeed(60)
-//                .setAcceleration(0.00005f, 90)
-//                .emit(0, -100, 30, 10000);
-//        new ParticleSystem(this, 1000, R.drawable.flower, 10000)
-//                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
-//                .setRotationSpeed(60)
-//                .setAcceleration(0.00005f, 90)
-//                .emit(Utils.getScreenWidth(this), -100, 30, 10000);
-        Toast toast = new Toast(getApplicationContext());
-
-        //创建一个填充物,用于填充Toast
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        //填充物来自的xml文件,在这个改成一个view
-        //实现xml到view的转变哦
-        View view = inflater.inflate(R.layout.toast, null);
-
-        //不一定需要，找到xml里面的组件，设置组件里面的具体内容
-        TextView textView1 = view.findViewById(R.id.tv_toast);
-
-        //把填充物放进toast
-        toast.setView(view);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        textView1.setText("赞！任务全部完成啦");
-
-        //展示toast
-        toast.show();
+                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 0, 90)
+                .setRotationSpeed(60)
+                .setAcceleration(0.00005f, 90)
+                .emit(0, -100, 30, 1500);
+        new ParticleSystem(this, 1000, R.drawable.flower, 3000)
+                .setSpeedModuleAndAngleRange(0.05f, 0.2f, 90, 180)
+                .setRotationSpeed(60)
+                .setAcceleration(0.00005f, 90)
+                .emit(Utils.getScreenWidth(this), -100, 30, 1500);
+        Utils.showToast(this, "赞！任务全部完成啦");
     }
 
     @Override

@@ -4,12 +4,12 @@ android:shape="rectangle">
     <shape>
         <!-- rectangle表示为矩形 -->
         <!-- 填充的颜色 -->
-        <solid android:color="#CC8BC34A" />
+        <solid android:color="#8BC34A" />
 
         <!-- 边框的颜色和粗细 -->
         <stroke
             android:width="1dp"
-            android:color="#CC8BC34A"
+            android:color="#8BC34A"
             />
 
         <!-- android:radius 圆角的半径 -->
@@ -22,12 +22,12 @@ android:shape="rectangle">
     <shape>
         <!-- rectangle表示为矩形 -->
         <!-- 填充的颜色 -->
-        <solid android:color="#CC538020" />
+        <solid android:color="#538020" />
 
         <!-- 边框的颜色和粗细 -->
         <stroke
             android:width="1dp"
-            android:color="#CC538020"
+            android:color="#538020"
             />
 
         <!-- android:radius 圆角的半径 -->
