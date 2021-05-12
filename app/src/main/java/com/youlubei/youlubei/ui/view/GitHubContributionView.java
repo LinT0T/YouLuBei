@@ -106,7 +106,7 @@ public class GitHubContributionView extends View {
         //文字画笔
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(Color.WHITE);
+        textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(30);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
@@ -193,6 +193,7 @@ public class GitHubContributionView extends View {
         int amonth = month;
         //方格的左上右下坐标
         float startX, startY, endX, endY;
+
         //起始月份为1月
         for (int i = DAY_OF_MONTH[month]; i < DAY_OF_MONTH[month + 2]; i++) {
             Day day = mDays.get(i);
@@ -229,8 +230,8 @@ public class GitHubContributionView extends View {
             }
             canvas.drawRect(startX, startY, endX, endY, boxPaint);
             textPaint.setColor(Color.GRAY);
-            canvas.drawText(String.valueOf(day.date), (startX + endX) / 2 - 20, (endY + startY) / 2 + 10, textPaint);
-            textPaint.setColor(Color.WHITE);
+//            canvas.drawText(String.valueOf(day.date), (startX + endX) / 2 - 20, (endY + startY) / 2 + 10, textPaint);
+            textPaint.setColor(Color.BLACK);
         }
         boxPaint.setColor(DEFAULT_BOX_COLOUR);//恢复默认颜色
     }

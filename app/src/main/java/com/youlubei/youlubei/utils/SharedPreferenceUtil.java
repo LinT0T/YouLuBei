@@ -65,7 +65,7 @@ public final class SharedPreferenceUtil {
      * @param defValue 默认值
      * @return
      */
-    @Nullable
+
     public Object get(Context context, String key, Object defValue){
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         String type = defValue.getClass().getSimpleName();

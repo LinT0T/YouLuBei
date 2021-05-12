@@ -1,5 +1,8 @@
 package com.youlubei.youlubei.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.NotificationChannel;
@@ -18,6 +21,7 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             .readTimeout(2, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false).build();
     private ImageView backgroundImageView;
-    private ImageView clockIn;
+    private ImageView clockIn,mineImageView;
     private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
@@ -80,9 +84,15 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         setContentView(R.layout.activity_main);
 
         initAnim();
+        ImageView homeImageView = findViewById(R.id.img_home);
+        homeImageView.setSelected(true);
+         mineImageView = findViewById(R.id.img_mine);
+
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
+
+
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
@@ -108,13 +118,13 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
             int noFinish = 4 - rvAdapter.checkFinish();
-            String s1,s2;
+            String s1, s2;
             if (noFinish == 0) {
-               s1 = "今天任务都完成啦！";
-                 s2 = "放松一下吧~";
+                s1 = "今天任务都完成啦！";
+                s2 = "放松一下吧~";
             } else {
-                 s1 = "今日还有" + noFinish + "个任务没完成哦~";
-                 s2 = "加油！";
+                s1 = "今日还有" + noFinish + "个任务没完成哦~";
+                s2 = "加油！";
             }
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
@@ -141,11 +151,12 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
 
                 )
                 .addTransition(new Slide(Gravity.BOTTOM).addTarget(R.id.root_item))
-                .addTransition(new Fade().addTarget(R.id.img_background_main))
+                .addTransition(new Fade().addTarget(R.id.img_background_main).addTarget(R.id.img_home).addTarget(R.id.img_mine))
                 .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in))
                 .setDuration(500);
 
         getWindow().setExitTransition(transition);
+        getWindow().setEnterTransition(transition);
         getWindow().setReenterTransition(transition);
     }
 
@@ -349,6 +360,15 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 startActivity(intent, options.toBundle());
             }
         });
+        mineImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MineActivity.class);
+                intent.putExtra("level", rvAdapter.checkFinish());
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+                startActivity(intent, options.toBundle());
+            }
+        });
     }
 
     /**
@@ -357,11 +377,19 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
      * @param view
      * @param position
      */
+    AnimatorSet animSet = new AnimatorSet();
+    float last = 0f;
+    float now = 0f;
+
     @Override
     public void onItemClick(View view, int position) {
         //点击item正文的代码逻辑
-
-
+        now += 100;
+        ObjectAnimator moveX = ObjectAnimator.ofFloat(titleTextView, "translationX", now, 500f);
+        moveX.setDuration(1000);
+        animSet.play(moveX);
+        animSet.start();
+        last = now;
     }
 
 
@@ -372,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
      * @param rvBean
      */
     @Override
-    public void onSetBtnCilck(View view, int position, RvBean rvBean) {
+    public void onSetBtnClick(View view, int position, RvBean rvBean) {
 
         //“设置”点击事件的代码逻辑
 //        Toast.makeText(MainActivity.this, "请设置", Toast.LENGTH_LONG).show();
@@ -406,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
      * @param position
      */
     @Override
-    public void onDeleteBtnCilck(View view, int position, boolean isFinish) {
+    public void onDeleteBtnClick(View view, int position, boolean isFinish) {
         rvAdapter.removeData(position);
         if (!isFinish) {
             new ParticleSystem(this, 1000, R.drawable.ic_good, 3000)
