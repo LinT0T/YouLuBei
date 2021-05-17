@@ -53,9 +53,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mList != null) {
+            System.out.println(mList);
             holder.line.setVisibility(View.INVISIBLE);
             RvBean rvBean = mList.get(position);
-//            holder.title.setText(rvBean.getTitle());
             holder.content.setText(rvBean.getContent());
             holder.layout.getLayoutParams().width = Utils.getScreenWidth(context);
             if (rvBean.isFinish()) {
@@ -171,7 +171,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                 @Override
                 public void onClick(View view) {
                     int n = holder.getLayoutPosition();
-                    mISetBtnClickListener.onSetBtnCilck(view, position, mList.get(position));
+                    mISetBtnClickListener.onSetBtnClick(view, position, mList.get(position));
                 }
             });
 
@@ -180,7 +180,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                 @Override
                 public void onClick(View v) {
                     int n = holder.getLayoutPosition();
-                    mIDeleteBtnClickListener.onDeleteBtnCilck(v, n, mList.get(position).isFinish());
+                    mIDeleteBtnClickListener.onDeleteBtnClick(v, n, mList.get(position).isFinish());
                 }
             });
 
@@ -317,9 +317,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
     public interface IonSlidingViewClickListener {
         void onItemClick(View view, int position);//点击item正文
 
-        void onDeleteBtnCilck(View view, int position, boolean isFinish);//点击“删除”
+        void onDeleteBtnClick(View view, int position, boolean isFinish);//点击“删除”
 
-        void onSetBtnCilck(View view, int position, RvBean rvBean);//点击“设置”
+        void onSetBtnClick(View view, int position, RvBean rvBean);//点击“设置”
 
         void onAllFinish();//所有任务完成
     }

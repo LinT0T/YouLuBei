@@ -14,7 +14,7 @@ public class RvBean implements Serializable {
      * 3: ResourcesCompat.getDrawable(getResources(), R.drawable.roug_sport_finish_background, null)
      */
     private int finishColor;
-    private boolean finish;
+    private boolean finish = false;
     private int lastPosition = 0;
     //每日目标
     private int num = 0;
@@ -35,7 +35,10 @@ public class RvBean implements Serializable {
     }
 
     public String getContent() {
-        return content;
+        if (content == null)
+            return "";
+        else
+            return content;
     }
 
     public void setContent(String content) {

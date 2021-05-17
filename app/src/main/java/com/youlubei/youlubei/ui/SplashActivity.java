@@ -1,9 +1,14 @@
 package com.youlubei.youlubei.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -42,6 +47,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+
+
         imageView = findViewById(R.id.img_splash);
         textView = findViewById(R.id.tv_splash);
 
@@ -119,4 +127,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 }
