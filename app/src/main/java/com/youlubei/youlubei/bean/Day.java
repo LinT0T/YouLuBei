@@ -1,5 +1,7 @@
 package com.youlubei.youlubei.bean;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /**
@@ -40,6 +42,7 @@ public class Day implements Serializable {
     public float endX;
     public float endY;
 
+    @NotNull
     @Override
     public String toString() {
         //这里直接在弹出框中显示
