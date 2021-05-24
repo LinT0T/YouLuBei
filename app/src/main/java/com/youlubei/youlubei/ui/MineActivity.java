@@ -37,6 +37,7 @@ public class MineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mine);
         ImageView mineImageView = findViewById(R.id.img_mine);
         ImageView homeImageView = findViewById(R.id.img_home);
+        ImageView favoriteView = findViewById(R.id.favorite_view);
         userLayout = findViewById(R.id.root_user);
         userLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +67,10 @@ public class MineActivity extends AppCompatActivity {
             }
         });
         mineImageView.setSelected(true);
+        favoriteView.setOnClickListener(v -> {
+            Intent intent = new Intent(MineActivity.this, FavoriteActivity.class);
+            startActivity(intent);
+        });
         Utils.initBar(this);
         contributionView = findViewById(R.id.contribution_chart);
         Intent intent = getIntent();
