@@ -106,7 +106,7 @@ public class GitHubContributionView extends View {
         //文字画笔
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(Color.WHITE);
+        textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(30);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
