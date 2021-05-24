@@ -20,8 +20,11 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationSet;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +82,8 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     float last = 0f;
     float now = 0f;
     private ImageView backgroundImageView;
-    private ImageView clockIn, mineImageView, favoriteImageView;
+    private ImageView clockIn, mineImageView;
+    private ImageButton favoriteImageButton;
     private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
@@ -100,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
-        favoriteImageView = findViewById(R.id.favorite_view);
+        favoriteImageButton = findViewById(R.id.favorite_view);
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
@@ -374,9 +378,20 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 startActivity(intent, options.toBundle());
             }
         });
-        favoriteImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
-            startActivity(intent);
+        favoriteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+        favoriteImageButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.color.warning));
+                }
+                return false;
+            }
         });
     }
 
