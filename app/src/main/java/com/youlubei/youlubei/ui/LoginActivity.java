@@ -50,6 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_left_in,
                 R.anim.slide_right_out,
                 R.anim.slide_right_in,
-                R.anim.slide_left_out ).replace(R.id.fl_container, registerFragment).addToBackStack("fragment").commit();
+                R.anim.slide_left_out).replace(R.id.fl_container, registerFragment).addToBackStack("fragment").commit();
     }
 }
