@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class LoginFragment extends Fragment {
 
-    private Button button,button2;
+    private Button button, button2;
 
     public LoginFragment() {
         // Required empty public constructor

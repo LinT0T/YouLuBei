@@ -1,16 +1,10 @@
 package com.youlubei.youlubei.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.ChangeBounds;
-import android.transition.ChangeImageTransform;
-import android.transition.ChangeTransform;
-import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -19,11 +13,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -46,7 +41,7 @@ import okhttp3.Response;
 
 public class SetActivity extends AppCompatActivity {
     private ImageView backgroundImageView, mImageView;
-    private TextView contentChTextView, contentEngTextView, geTextView,titleTextView;
+    private TextView contentChTextView, contentEngTextView, geTextView, titleTextView;
     private EditText numEditText;
     private Button mButton;
 
@@ -102,21 +97,21 @@ public class SetActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     System.out.println("haha    " + s);
-                        switch (finalType) {
-                            case "背单词":
-                                setButton(s, 120, 10);
-                                break;
-                            case "阅读":
-                                setButton(s, 180, 30);
-                                break;
-                            case "学习":
-                                setButton(s, 480, 30);
-                                break;
-                            case "运动":
-                                setButton(s, 300, 10);
-                                break;
-                        }
-                }catch (Exception e){
+                    switch (finalType) {
+                        case "背单词":
+                            setButton(s, 120, 10);
+                            break;
+                        case "阅读":
+                            setButton(s, 180, 30);
+                            break;
+                        case "学习":
+                            setButton(s, 480, 30);
+                            break;
+                        case "运动":
+                            setButton(s, 300, 10);
+                            break;
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -149,16 +144,16 @@ public class SetActivity extends AppCompatActivity {
         if (s.equals("")) {
             return;
         }
-            if (Integer.parseInt(String.valueOf(s)) > max) {
-                setButtonTextAndColor("每日任务过难，是否确定？", R.color.warning);
+        if (Integer.parseInt(String.valueOf(s)) > max) {
+            setButtonTextAndColor("每日任务过难，是否确定？", R.color.warning);
+        } else {
+            if (Integer.parseInt(String.valueOf(s)) < min) {
+                setButtonTextAndColor("太简单啦，是否确定？", R.color.easy);
             } else {
-                if (Integer.parseInt(String.valueOf(s)) < min) {
-                    setButtonTextAndColor("太简单啦，是否确定？", R.color.easy);
-                } else {
-                    setButtonTextAndColor("完成", R.color.white);
-                }
-
+                setButtonTextAndColor("完成", R.color.white);
             }
+
+        }
 
     }
 

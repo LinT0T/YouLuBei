@@ -1,8 +1,5 @@
 package com.youlubei.youlubei.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -12,6 +9,9 @@ import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.youlubei.youlubei.R;
 import com.youlubei.youlubei.ui.view.GitHubContributionView;

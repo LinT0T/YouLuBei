@@ -1,14 +1,7 @@
 package com.youlubei.youlubei.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,6 +11,8 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -49,17 +44,16 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
 
-
         imageView = findViewById(R.id.img_splash);
         textView = findViewById(R.id.tv_splash);
 
         textView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.INVISIBLE);
         Utils.initBar(this);
-        loadBackground(this,imageView);
+        loadBackground(this, imageView);
         intent = new Intent(SplashActivity.this, MainActivity.class);
         Button button = findViewById(R.id.btn_skip_splash);
-        Handler handler =new Handler();
+        Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -83,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private void loadBackground(Activity activity,ImageView imageView) {
+    private void loadBackground(Activity activity, ImageView imageView) {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
                 .connectTimeout(2, TimeUnit.SECONDS)
                 .writeTimeout(2, TimeUnit.SECONDS)
@@ -113,13 +107,13 @@ public class SplashActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     Glide.with(activity).load(imgUrl).into(imageView);
                     textView.setVisibility(View.VISIBLE);
-                    Animation animation = new AlphaAnimation(0,1);
+                    Animation animation = new AlphaAnimation(0, 1);
                     animation.setDuration(1000);
                     textView.setText(text);
                     textView.startAnimation(animation);
                     imageView.setVisibility(View.VISIBLE);
                     imageView.startAnimation(animation);
-                    intent.putExtra("url",imgUrl);
+                    intent.putExtra("url", imgUrl);
                 });
 
                 Log.d("splash", "onResponse: " + imgUrl);
@@ -127,7 +121,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }

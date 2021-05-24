@@ -17,11 +17,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.youlubei.youlubei.ui.view.LeftSlideView;
 import com.youlubei.youlubei.R;
+import com.youlubei.youlubei.bean.RvBean;
+import com.youlubei.youlubei.ui.view.LeftSlideView;
 import com.youlubei.youlubei.utils.SharedPreferenceUtil;
 import com.youlubei.youlubei.utils.Utils;
-import com.youlubei.youlubei.bean.RvBean;
 
 import java.util.List;
 
@@ -159,7 +159,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
                         closeMenu();//关闭菜单
                     } else {
                         int n = holder.getLayoutPosition();
-                        mIDeleteBtnClickListener.onItemClick(v, n);
+                        mIDeleteBtnClickListener.onItemClick(v, n, mList.get(position));
                     }
 
                 }
@@ -315,7 +315,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> implem
      * 注册接口的方法：点击事件。在Mactivity.java实现这些方法。
      */
     public interface IonSlidingViewClickListener {
-        void onItemClick(View view, int position);//点击item正文
+        void onItemClick(View view, int position, RvBean rvBean);//点击item正文
 
         void onDeleteBtnClick(View view, int position, boolean isFinish);//点击“删除”
 
