@@ -96,7 +96,6 @@ public class SetActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    System.out.println("haha    " + s);
                     switch (finalType) {
                         case "背单词":
                             setButton(s, 120, 10);

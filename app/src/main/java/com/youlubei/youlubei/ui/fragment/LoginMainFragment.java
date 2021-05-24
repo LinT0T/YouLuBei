@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
@@ -14,12 +14,14 @@ import com.youlubei.youlubei.ui.LoginActivity;
 import java.util.Objects;
 
 
-public class LoginFragment2 extends Fragment {
+public class LoginMainFragment extends Fragment {
 
+    private Button button, button2;
 
-    public LoginFragment2() {
+    public LoginMainFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,10 +32,18 @@ public class LoginFragment2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        button = view.findViewById(R.id.btn_login);
+        button2 = view.findViewById(R.id.btn_register);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        View view = inflater.inflate(R.layout.fragment_login2, container, false);
-        TextView textView = view.findViewById(R.id.tv_login_to_register);
-        textView.setOnClickListener(new View.OnClickListener() {
+                ((LoginActivity) Objects.requireNonNull(getActivity())).changeToLoginFragment();
+
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((LoginActivity) Objects.requireNonNull(getActivity())).changeToRegisterFragment();
@@ -41,4 +51,6 @@ public class LoginFragment2 extends Fragment {
         });
         return view;
     }
+
+
 }

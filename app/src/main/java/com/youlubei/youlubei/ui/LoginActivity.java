@@ -7,15 +7,15 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.youlubei.youlubei.R;
+import com.youlubei.youlubei.ui.fragment.LoginMainFragment;
 import com.youlubei.youlubei.ui.fragment.LoginFragment;
-import com.youlubei.youlubei.ui.fragment.LoginFragment2;
 import com.youlubei.youlubei.ui.fragment.RegisterFragment;
 import com.youlubei.youlubei.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 
+    LoginMainFragment loginMainFragment;
     LoginFragment loginFragment;
-    LoginFragment2 loginFragment2;
     RegisterFragment registerFragment;
 
     @Override
@@ -24,13 +24,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Utils.initBar(this);
         ImageView backImageView = findViewById(R.id.img_back_login);
+        loginMainFragment = new LoginMainFragment();
         loginFragment = new LoginFragment();
-        loginFragment2 = new LoginFragment2();
         registerFragment = new RegisterFragment();
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_right_in,
                 R.anim.slide_left_out,
                 R.anim.slide_left_in,
-                R.anim.slide_right_out).replace(R.id.fl_container, loginFragment).commit();
+                R.anim.slide_right_out).replace(R.id.fl_container, loginMainFragment).commit();
         backImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_right_in,
                 R.anim.slide_left_out,
                 R.anim.slide_left_in,
-                R.anim.slide_right_out).replace(R.id.fl_container, loginFragment2).addToBackStack("fragment").commit();
+                R.anim.slide_right_out).replace(R.id.fl_container, loginFragment).addToBackStack("fragment").commit();
     }
 
     public void changeToRegisterFragment() {
