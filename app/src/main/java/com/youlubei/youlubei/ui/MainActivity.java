@@ -1,21 +1,33 @@
 package com.youlubei.youlubei.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationSet;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,8 +72,18 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             .writeTimeout(2, TimeUnit.SECONDS)
             .readTimeout(2, TimeUnit.SECONDS)
             .retryOnConnectionFailure(false).build();
+    /**
+     * item正文的点击事件
+     *
+     * @param view
+     * @param position
+     */
+    AnimatorSet animSet = new AnimatorSet();
+    float last = 0f;
+    float now = 0f;
     private ImageView backgroundImageView;
     private ImageView clockIn, mineImageView;
+    private ImageButton favoriteImageButton;
     private TextView titleTextView, contentChTextView, contentEngTextView;
     private RecyclerView recyclerView;
     private RvAdapter rvAdapter;
@@ -82,8 +104,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
-
-
+        favoriteImageButton = findViewById(R.id.favorite_view);
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
@@ -262,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         clockInListener();
     }
 
-
     private void getDate(TextView tv) {
         Calendar calendar = Calendar.getInstance();
         int nowTime = calendar.get(Calendar.HOUR_OF_DAY);
@@ -277,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         }
 
     }
-
 
     private void loadBackground(Activity activity) {
         String url = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
@@ -340,7 +359,6 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         });
     }
 
-
     private void clockInListener() {
         clockIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -360,26 +378,22 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 startActivity(intent, options.toBundle());
             }
         });
+        favoriteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+            }
+        });
+        favoriteImageButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    ((ImageButton) v).setImageDrawable(getResources().getDrawable(R.color.warning));
+                }
+                return false;
+            }
+        });
     }
-
-    /**
-     * item正文的点击事件
-     *
-     * @param view
-     * @param position
-     */
-
-    @Override
-    public void onItemClick(View view, int position, RvBean rvBean) {
-        //点击item正文的代码逻辑
-        Intent intent = new Intent(MainActivity.this, ClockActivity.class);
-        intent.putExtra("time", rvBean.getNum());
-        if ((!rvBean.getContent().equals("背单词")) && (!rvBean.isFinish())) {
-            startActivity(intent);
-        }
-
-    }
-
 
     /**
      * item的左滑设置
@@ -413,6 +427,17 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 rvAdapter.changeNum(position, result);
             }
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position, RvBean rvBean) {
+        //点击item正文的代码逻辑
+        now += 100;
+        ObjectAnimator moveX = ObjectAnimator.ofFloat(titleTextView, "translationX", now, 500f);
+        moveX.setDuration(1000);
+        animSet.play(moveX);
+        animSet.start();
+        last = now;
     }
 
     /**

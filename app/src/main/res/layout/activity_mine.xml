@@ -51,6 +51,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_register_mine"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_user_name_mine" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -155,4 +156,14 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_vip_mine" />
+
+    <ImageView
+        android:id="@+id/favorite_view"
+        android:layout_width="48dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/root_user"
+        app:layout_constraintEnd_toEndOf="@+id/root_user"
+        app:srcCompat="@drawable/favorite" />
 </androidx.constraintlayout.widget.ConstraintLayout>

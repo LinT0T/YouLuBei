@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/1/13.
+ * Created by Administrator on 2021/3/28.
  * 仿GitHub的提交活跃表
  * 横屏使用
  */
@@ -106,7 +106,7 @@ public class GitHubContributionView extends View {
         //文字画笔
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(Color.BLACK);
+        textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(30);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
@@ -122,10 +122,6 @@ public class GitHubContributionView extends View {
         metrics = textPaint.getFontMetrics();
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -190,11 +186,11 @@ public class GitHubContributionView extends View {
     private void drawBox(Canvas canvas) {
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH);
-        int amonth = month;
+        int lastmonth = month;
         //方格的左上右下坐标
         float startX, startY, endX, endY;
 
-        //起始月份为1月
+        //起始月份为当前月
         for (int i = DAY_OF_MONTH[month]; i < DAY_OF_MONTH[month + 2]; i++) {
             Day day = mDays.get(i);
             if (i == 0) {
@@ -205,10 +201,10 @@ public class GitHubContributionView extends View {
                 //如果当天是周1，那么说明增加了一列
                 column++;
                 //如果列首的月份有变化，那么说明需要画月份
-                if (day.month > amonth) {
-                    amonth = day.month;
+                if (day.month > lastmonth) {
+                    lastmonth = day.month;
                     //月份文本的坐标计算,x坐标在变化，而y坐标都是一样的，boxSide/2(间隙)
-                    canvas.drawText(months[amonth - 1], padding + column * (boxSide + boxInterval) + 70, padding - boxSide / 2 + 10, textPaint);
+                    canvas.drawText(months[lastmonth - 1], padding + column * (boxSide + boxInterval) + 70, padding - boxSide / 2 + 10, textPaint);
                 }
             }
             //计算方格坐标点,x坐标一致随列数的增多而增加,y坐标随行数的增多而变化
@@ -229,9 +225,9 @@ public class GitHubContributionView extends View {
                 boxPaint.setColor(day.colour);
             }
             canvas.drawRect(startX, startY, endX, endY, boxPaint);
-            textPaint.setColor(Color.GRAY);
-//            canvas.drawText(String.valueOf(day.date), (startX + endX) / 2 - 20, (endY + startY) / 2 + 10, textPaint);
-            textPaint.setColor(Color.BLACK);
+            //textPaint.setColor(Color.WHITE);
+            //canvas.drawText(String.valueOf(day.date), (startX + endX) / 2 - 20, (endY + startY) / 2 + 10, textPaint);
+            //textPaint.setColor(Color.BLACK);
         }
         boxPaint.setColor(DEFAULT_BOX_COLOUR);//恢复默认颜色
     }
