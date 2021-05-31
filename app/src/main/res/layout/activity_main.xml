@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:paddingStart="15dp"
-        android:paddingEnd="15dp"
+        android:paddingEnd="45dp"
         android:text="永远不要为了讨好这个世界，而扭曲了自己。"
         android:textColor="#F3F3F3"
         android:textSize="15sp"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:paddingStart="15dp"
-        android:paddingEnd="15dp"
+        android:paddingEnd="25dp"
         android:text="Never twist yourself just to please the world."
         android:textColor="#F3F3F3"
         android:textSize="15sp"
@@ -138,7 +138,7 @@
 
 
     <ImageView
-        android:id="@+id/favorite_view"
+        android:id="@+id/img_favor_mine"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="15dp"

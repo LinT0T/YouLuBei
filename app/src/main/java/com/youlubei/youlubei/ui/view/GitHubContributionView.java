@@ -356,7 +356,7 @@ public class GitHubContributionView extends View {
             //绘制文字,x=leftX+文字和矩形间距,y=topY+文字和矩形上面间距+文字顶到基线高度
             canvas.drawText(popupInfo, leftX + toastSide, topY + toastSide + Math.abs(metrics.ascent), textPaint);
             clickDay = null;//重新置空，保证点击方格外信息消失
-            textPaint.setColor(Color.WHITE);//恢复画笔颜色
+            textPaint.setColor(Color.BLACK);//恢复画笔颜色
         }
     }
 

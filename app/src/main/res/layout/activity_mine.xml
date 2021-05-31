@@ -103,6 +103,112 @@
         app:layout_constraintEnd_toEndOf="@id/img_vip_mine"
         app:layout_constraintTop_toTopOf="@id/img_vip_mine" />
 
+
+    <View
+        android:id="@+id/divider_setting"
+        android:layout_width="1dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_vip_mine" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/favorite_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/divider_setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/divider_setting">
+
+        <ImageView
+            android:id="@+id/img_favor_mine"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:src="@drawable/favor_mine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_favor_mine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的收藏"
+            android:textColor="#cdcdcd"
+            app:layout_constraintEnd_toEndOf="@id/img_favor_mine"
+            app:layout_constraintStart_toStartOf="@id/img_favor_mine"
+            app:layout_constraintTop_toBottomOf="@id/img_favor_mine" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/setting_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/divider_setting"
+        app:layout_constraintTop_toTopOf="@id/divider_setting">
+
+
+        <ImageView
+            android:id="@+id/img_setting_mine"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:src="@drawable/setting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_favor_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更多设置"
+            android:textColor="#cdcdcd"
+            app:layout_constraintEnd_toEndOf="@id/img_setting_mine"
+            app:layout_constraintStart_toStartOf="@id/img_setting_mine"
+            app:layout_constraintTop_toBottomOf="@id/img_setting_mine" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.youlubei.youlubei.ui.view.GitHubContributionView
+        android:id="@+id/contribution_chart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:background="#E6E6E6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_record" />
+
+    <TextView
+        android:id="@+id/tv_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:background="#E6E6E6"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:text="打卡记录"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/divider_setting" />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/line" />
+
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
@@ -144,25 +250,5 @@
         app:layout_constraintStart_toStartOf="@id/divider"
         app:layout_constraintTop_toTopOf="@id/line" />
 
-    <com.youlubei.youlubei.ui.view.GitHubContributionView
-        android:id="@+id/contribution_chart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_vip_mine" />
 
-    <ImageView
-        android:id="@+id/favorite_view"
-        android:layout_width="48dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@id/line"
-        android:elevation="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/favorite" />
 </androidx.constraintlayout.widget.ConstraintLayout>

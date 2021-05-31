@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         backgroundImageView = findViewById(R.id.img_background_main);
         clockIn = findViewById(R.id.img_clock_in);
         titleTextView = findViewById(R.id.tv_title_main);
-        favoriteImageButton = findViewById(R.id.favorite_view);
+        favoriteImageButton = findViewById(R.id.img_favor_mine);
         contentChTextView = findViewById(R.id.tv_content_ch_main);
         contentEngTextView = findViewById(R.id.tv_content_en_main);
         recyclerView = findViewById(R.id.rv_main);
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
                 )
                 .addTransition(new Slide(Gravity.BOTTOM).addTarget(R.id.root_item))
                 .addTransition(new Fade().addTarget(R.id.img_background_main).addTarget(R.id.img_home).addTarget(R.id.img_mine))
-                .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in).addTarget(R.id.favorite_view))
+                .addTransition(new Slide(Gravity.END).addTarget(R.id.img_clock_in).addTarget(R.id.img_favor_mine))
                 .setDuration(500);
 
         getWindow().setExitTransition(transition);
@@ -210,9 +210,9 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
             } else {
                 if (dayOfYear != dayOfYearInData) {
                     RvBean bean0 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                    RvBean bean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                    RvBean bean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
-                    RvBean bean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data0", ""), RvBean.class);
+                    RvBean bean1 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data1", ""), RvBean.class);
+                    RvBean bean2 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data2", ""), RvBean.class);
+                    RvBean bean3 = new Gson().fromJson((String) SharedPreferenceUtil.getInstance().get(this, "data3", ""), RvBean.class);
                     rvBean0 = new RvBean("背单词",
                             0,
                             false,
