@@ -37,7 +37,7 @@ public class MineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mine);
         ImageView mineImageView = findViewById(R.id.img_mine);
         ImageView homeImageView = findViewById(R.id.img_home);
-        ImageView favoriteView = findViewById(R.id.favorite_view);
+        ImageView favoriteView = findViewById(R.id.img_favor_mine);
         userLayout = findViewById(R.id.root_user);
         userLayout.setOnClickListener(new View.OnClickListener() {
             @Override
