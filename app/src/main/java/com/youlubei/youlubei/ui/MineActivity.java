@@ -2,12 +2,17 @@ package com.youlubei.youlubei.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.MessageQueue;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +43,7 @@ public class MineActivity extends AppCompatActivity {
         ImageView mineImageView = findViewById(R.id.img_mine);
         ImageView homeImageView = findViewById(R.id.img_home);
         ImageView favoriteView = findViewById(R.id.img_favor_mine);
+        Button openButton = findViewById(R.id.open_bt);
         userLayout = findViewById(R.id.root_user);
         userLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,5 +97,9 @@ public class MineActivity extends AppCompatActivity {
                 contributionView.setData(2021, i, j, (Integer) sharedPreferences.get(this, i + j + str, 0));
             }
         }
+        openButton.setOnClickListener(v -> {
+            Intent intent1 = new Intent(MineActivity.this, OpenVipActivity.class);
+            startActivity(intent1);
+        });
     }
 }

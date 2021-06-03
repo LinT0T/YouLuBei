@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="8dp"
+        android:layout_height="93dp"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/vip_background"
+        android:layout_width="96dp"
+        android:layout_height="93dp"
+        android:layout_marginStart="7dp"
+        android:scaleType="centerCrop"
+        android:src="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/view3"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="Suspicious0dp" />
+
+    <TextView
+        android:id="@+id/vip_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="4dp"
+        android:text="连续包年"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/vip_price"
+        app:layout_constraintEnd_toEndOf="@+id/img_background_login"
+        app:layout_constraintHorizontal_bias="0.432"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vip_background" />
+
+    <TextView
+        android:id="@+id/vip_price"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:text="¥148"
+        android:textColor="@color/sport"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/vip_background"
+        app:layout_constraintEnd_toEndOf="@+id/vip_time"
+        app:layout_constraintHorizontal_bias="0.884"
+        app:layout_constraintStart_toStartOf="@+id/vip_background"
+        app:layout_constraintTop_toTopOf="@+id/vip_background"
+        app:layout_constraintVertical_bias="0.559" />
+
+    <View
+        android:layout_width="8dp"
+        android:layout_height="93dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/img_background_login"
+        app:layout_constraintStart_toEndOf="@+id/vip_background" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

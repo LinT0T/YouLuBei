@@ -93,6 +93,7 @@
         app:layout_constraintTop_toTopOf="@id/img_vip_mine" />
 
     <Button
+        android:id="@+id/open_bt"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginEnd="15dp"
