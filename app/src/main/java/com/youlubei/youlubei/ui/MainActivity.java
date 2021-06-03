@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     private ConstraintLayout layout;
     private View container;
     private String imgUrl;
+    private boolean isLike = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -343,15 +344,18 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
     }
 
     private void clockInListener() {
-        clockIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
-                intent.putExtra("level", rvAdapter.checkFinish());
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
-                startActivity(intent, options.toBundle());
-            }
-        });
+        /**
+         * 打卡button
+         */
+//        clockIn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MainActivity.this, ContributionActivity.class);
+//                intent.putExtra("level", rvAdapter.checkFinish());
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+//                startActivity(intent, options.toBundle());
+//            }
+//        });
         mineImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -365,8 +369,15 @@ public class MainActivity extends AppCompatActivity implements RvAdapter.IonSlid
         favoriteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.showToast(context,"收藏成功");
-                favoriteImageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.favor,null));
+                if (!isLike) {
+                    Utils.showToast(context, "收藏成功");
+                    favoriteImageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.favor, null));
+                    isLike = true;
+                } else {
+                    Utils.showToast(context, "取消成功");
+                    favoriteImageButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.favor_mine, null));
+                    isLike = false;
+                }
             }
         });
 
